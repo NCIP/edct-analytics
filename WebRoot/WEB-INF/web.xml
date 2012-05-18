@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">	
+	
+	<!-- *********** CONTEXT PARAMS ***************** -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value> 
+			/WEB-INF/spring/*-config.xml
+        </param-value>
+	</context-param> 
+	
+	<!-- LISTENERS -->
+	<listener>
+	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>	
+	
+	<servlet>
+	  <servlet-name>CAHopeDataSourceServlet</servlet-name>
+	  <servlet-class>com.healthcit.analytics.servlet.CAHopeDataSourceServlet</servlet-class>
+	</servlet>
+	<servlet>
+	  <servlet-name>ExcelExportServlet</servlet-name>
+	  <servlet-class>com.healthcit.analytics.servlet.ExcelExportServlet</servlet-class>
+	</servlet>
+	<servlet>
+	  <servlet-name>DataExportServlet</servlet-name>
+	  <servlet-class>com.healthcit.analytics.servlet.DataExportServlet</servlet-class>
+	</servlet>
+	<servlet>
+	  <display-name>DWR</display-name>
+	  <servlet-name>dwrservlet</servlet-name>  
+	  <servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
+	  <init-param>
+	     <param-name>debug</param-name>
+	     <param-value>true</param-value>
+	  </init-param>
+	</servlet>
+	<servlet>
+	  <servlet-name>AJAXStubServlet</servlet-name>
+	  <servlet-class>com.healthcit.analytics.servlet.AJAXStubServlet</servlet-class>
+	</servlet>
+		
+
+
+  <servlet-mapping>
+	  <servlet-name>CAHopeDataSourceServlet</servlet-name>
+	  <url-pattern>/caHopeDS</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ExcelExportServlet</servlet-name>
+    <url-pattern>/ExcelExportServlet</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>DataExportServlet</servlet-name>
+    <url-pattern>/DataExportServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  <servlet-name>dwrservlet</servlet-name>
+  <url-pattern>/dwr/*</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AJAXStubServlet</servlet-name>
+	<url-pattern>/stub/*</url-pattern>
+</servlet-mapping>
+  
+  
+  <welcome-file-list>
+  	<welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+	
+</web-app>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.directwebremoting.org/schema/spring-dwr 
+ 		http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+		
+		<!-- Properties Files -->
+		<bean id="messageSource"
+			  class="org.springframework.context.support.ResourceBundleMessageSource">
+			<property name="basename" value="messages" />
+		</bean>
+		
+		<bean id="configSource"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	        <property name="location"  value="classpath:config.properties" />
+	    </bean>
+	    
+	    <!-- Database -->
+	    <bean id="dataSource"
+		    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		    <property name="driverClassName" value="org.postgresql.Driver" />
+		    <property name="url">
+		    	<value>jdbc:postgresql://${connection.host}:${connection.port}/${connection.schema}?autoReconnect=true</value>
+		    </property>
+		    <property name="username">
+		    	<value>${connection.username}</value>
+		    </property>
+		    <property name="password">
+		    	<value>${connection.password}</value>
+		    </property>
+		</bean>
+		
+		<!-- DWR -->
+		<context:component-scan base-package="com.healthcit.analytics.*"/>  
+		<context:annotation-config /> 
+		<dwr:configuration/>
+		<dwr:annotation-config/>       
+
+</beans>
