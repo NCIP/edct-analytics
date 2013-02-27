@@ -1,3 +1,13 @@
+/*******************************************************************************
+*Copyright (c) 2013 HealthCare It, Inc.
+*All rights reserved. This program and the accompanying materials
+*are made available under the terms of the BSD 3-Clause license
+*which accompanies this distribution, and is available at
+*http://directory.fsf.org/wiki/License:BSD_3Clause
+*
+*Contributors:
+*    HealthCare It, Inc - initial API and implementation
+*******************************************************************************/
 /*.demoHeaders { margin-top: 2em; }
 #dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
 #dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
@@ -58,13 +68,13 @@ body {
 	width: 1160px;  
 }
 .menu_container { 
+    border-bottom: 1px inset;
+    border-right: 1px inset black;
     height: 20px;
-    padding-top: 10px;
-    width: 226px;
     margin-top: 19px;
-    padding-left: 935px;
-    border-bottom:1px inset;
-    border-right:1px inset black;
+    padding-left: 810px;
+    padding-top: 10px;
+    width: 350px;
 }
 .submenu_container {
 	width: 1095px;
@@ -468,6 +478,19 @@ span.red-asterisk {
 #showSavedReportsContainer .item span.titleText, #generateNewReportsContainer .item span.titleText{
 	background: url(../images/ReportIcon.bmp) no-repeat;
 	padding-left: 40px;
+	padding-bottom:10px;
+	padding-top: 5px
+}
+
+#showSavedReportsContainer .item span.private{
+	background: url(../images/PrivateReport.jpg) no-repeat;
+	padding-right: 40px;
+	padding-bottom:10px;
+	padding-top: 5px
+}
+
+#showSavedReportsContainer .item span.non-private{
+	padding-right: 40px;
 	padding-bottom:10px;
 	padding-top: 5px
 }
@@ -1474,3 +1497,190 @@ div#popup_container #popup_message li {
 }
 /* END Popup Styles */
 
+/* Login styles */
+.inputTable {
+	font-size: 1.1em;
+	width: 250px;
+	border-spacing: 0;
+	border-color: #f4f7fb;
+}
+.inputTable td, .inputTable th
+{
+    padding: 5px;
+}
+.inputTable * {
+	background-color: #f4f7fb;
+}
+
+.inputTable input {
+	background-color: white;
+	margin: 5px;
+}
+
+#userCredentials .inputTable {
+	margin-left: 280px;
+}
+
+.loginHeader, .loginBottom {
+	background-color: #e9eff6;
+	color: #5f82a9;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.requiredField {
+    background-image: url("../images/required-field.png");
+    background-position:left 3px;
+	background-repeat:no-repeat;
+	margin-left: 3px;
+	padding-left:10px;
+}
+
+.twoColFixLtHdr #container {
+	width: 872px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: none;
+	margin: 15px auto; /* the auto margins (in conjunction with a width) center the page */
+	border: 0;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+}
+.twoColFixLtHdr #header {
+	background: none;
+	padding: 0;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
+}
+.twoColFixLtHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+
+.twoColFixLtHdr #content {
+	background: url(../images/07.jpg) repeat-y scroll left top;
+	text-align:left;
+	/* padding-left: 20px;
+	padding: 5px 45px 10px; */
+	padding: 5px 45px 0px;
+	width: 884px;
+}
+
+.twoColFixLtHdr #sidebar1 {
+	float: left; /* since this element is floated, a width must be given */
+	width: 170px; /* the actual width of this div, in standards-compliant browsers, or standards mode in Internet Explorer will include the padding and border in addition to the width */
+	background:#F5F5F5; /* the background color will be displayed for the length of the content in the column, but no further */
+	padding: 15px 10px 15px 20px;
+	margin-left:18px;
+}
+.twoColFixLtHdr #mainContent {
+	margin: 0 0 0 250px; /* the left margin on this div element creates the column down the left side of the page - no matter how much content the sidebar1 div contains, the column space will remain. You can remove this margin if you want the #mainContent div's text to fill the #sidebar1 space when the content in #sidebar1 ends. */
+	padding: 10px 40px 10px 10px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+
+}
+
+.border {
+	border-bottom:2px solid #CCCCCC;
+	border-left:2px solid #CCCCCC;
+	border-right:2px solid #CCCCCC;
+	padding:0;
+}
+
+.d0 td {
+	margin:0;
+	padding:5px 0 5px 10px;
+}
+
+.d1 td {
+	margin:0;
+	padding:5px 0 5px 10px;
+}
+
+h4 {
+color:#4F81BD;
+font-family:Verdana,Geneva,sans-serif;
+margin:0;
+padding:10px;
+}
+
+.validation-error {
+	color:red;
+	padding-left: 15px;
+	font-size: small;
+}
+
+.loginFormContainer {
+	padding-top: 100px;
+	width: 100%;	
+}
+
+.loginTitle{
+	width: 800px;
+	font-family:Times; 
+	font-style:italic;
+	color: #262262; 
+	font-size:16px;
+	font-weight: bold;
+	padding: 10px;
+	background:url(../images/header_long.png) no-repeat 0 0;
+}
+
+.webkit-title{
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+.loginForm{
+	border: 1px solid gray;
+	background: url("../images/confirmboxgradient.jpg") repeat-x;
+	width: 800px;
+	margin-right: 10px;
+	margin-left: -10px;
+}
+
+.loginForm table {
+	width: 300px;
+}
+
+.login-errror {
+	color:red;
+	font-weight: bold;
+}
+
+.admin-container {
+	padding-top: 20px;
+	width: 100%;
+}
+
+.admin-title {
+	width: 800px;
+	font-family:Times; 
+	font-style:italic;
+	color: #262262; 
+	font-size:16px;
+	font-weight: bold;
+	padding: 10px;
+	background:url(../images/header_long.png) no-repeat 0 0;
+}
+
+.admin-content {
+	border: 1px solid gray;
+	background: url("../images/confirmboxgradient.jpg") repeat-x;
+	width: 800px;
+	margin-right: 10px;
+	margin-left: -10px;
+}
+
+.admin-content  table {
+	margin-top: 40px;
+	width: 500px;
+	border: 0px !important;
+}
+
+.admin-content  table td{
+	border: 0px !important;
+	vertical-align: middle;
+}
+
+.admin-content  table td a{
+	vertical-align: middle;
+}
+
+.admin-user-edit img{
+	border: 0px !important;
+}

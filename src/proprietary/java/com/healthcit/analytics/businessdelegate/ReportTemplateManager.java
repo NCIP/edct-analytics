@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 HealthCare It, Inc.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause license
+ * which accompanies this distribution, and is available at
+ * http://directory.fsf.org/wiki/License:BSD_3Clause
+ * 
+ * Contributors:
+ *     HealthCare It, Inc - initial API and implementation
+ ******************************************************************************/
 package com.healthcit.analytics.businessdelegate;
 
 import java.util.List;
@@ -18,9 +28,9 @@ public class ReportTemplateManager {
 	private ReportTemplateDao reportTemplateDao;
 		
 	@Transactional(readOnly = true, propagation=Propagation.REQUIRED)
-	public JSONArray getAllReports()
+	public JSONArray getAllReports(Long userId)
 	{
-		List<ReportTemplate> templates = reportTemplateDao.findAllReportTemplates();
+		List<ReportTemplate> templates = reportTemplateDao.findAllReportTemplates(userId);
 		
 		JSONArray jsonArray = new JSONArray();
 		
@@ -41,45 +51,50 @@ public class ReportTemplateManager {
 	}
 	
 	@Transactional(readOnly = true, propagation=Propagation.REQUIRED)
-	public JSONObject getReportByTitle( String title )
-	{
-		ReportTemplate reportTemplate = reportTemplateDao.getReportTemplateByTitle(title);
-		
-		return JSONObject.fromObject(reportTemplate);
+	private ReportTemplate getReportByTitle(String title, long userId,
+			boolean shared) {
+		ReportTemplate reportTemplate = null;
+		List<ReportTemplate> reportTemplates = reportTemplateDao
+				.getReportTemplatesByTitle(title);
+		for (ReportTemplate template : reportTemplates) {
+			if ((template.isShared() && shared) || (!template.isShared() && !shared && userId == template.getOwnerId())) {
+				reportTemplate = template;
+				break;
+			}
+		}
+		return reportTemplate;
 	}
 	
 	@Transactional(readOnly = true, propagation=Propagation.REQUIRED)
-	public boolean checkIfReportTitleExists( String title )
+	public boolean checkIfReportTitleExists( String title, Long userId, Boolean shared )
 	{
-		return ( ! getReportByTitle( StringUtils.lowerCase( title ) ).isNullObject() );
+		return getReportByTitle( StringUtils.lowerCase( title ) , userId, shared) != null;
 	}
 	
 	@Transactional(readOnly = false, propagation=Propagation.REQUIRED)
-	public Long saveOrUpdate( ReportTemplate reportTemplate )
+	public Long saveOrUpdate( ReportTemplate reportTemplate)
 	{
 		if ( reportTemplate.isEmpty() ) return null;
 		
 		int numRows = 0;
-		
-		if ( reportTemplate.getId()==null ) 
-		{
-			numRows = reportTemplateDao.updateReportTemplateByTitle( reportTemplate );
-		}
-		else 
-		{
-			numRows = reportTemplateDao.updateReportTemplateById( reportTemplate );
+		ReportTemplate template = this.getReportByTitle(reportTemplate.getTitle(), reportTemplate.getOwnerId(), reportTemplate.isShared());
+		if (template != null) {
+			if (reportTemplate.getId() == null) {
+				reportTemplate.setId(template.getId());
+				//numRows = reportTemplateDao
+				//		.updateReportTemplateByTitle(reportTemplate);
+			} //else {
+				numRows = reportTemplateDao
+						.updateReportTemplateById(reportTemplate);
+			//}
 		}
 		
 		if ( numRows == 0 )
 		{
-			numRows = reportTemplateDao.saveReportTemplate( reportTemplate );
-			
-			if ( numRows == 0 ) return null;
-		}
+			reportTemplateDao.saveReportTemplate( reportTemplate );			
+		}		
 		
-		ReportTemplate savedTemplate = reportTemplateDao.getReportTemplateByTitle( reportTemplate.getTitle() );
-		
-		return ( savedTemplate == null ? null : savedTemplate.getId() );
+		return reportTemplate.getId();
 		
 	}
 	

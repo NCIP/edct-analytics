@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 HealthCare It, Inc.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause license
+ * which accompanies this distribution, and is available at
+ * http://directory.fsf.org/wiki/License:BSD_3Clause
+ * 
+ * Contributors:
+ *     HealthCare It, Inc - initial API and implementation
+ ******************************************************************************/
 package com.healthcit.analytics.utils;
 
 import java.util.ArrayList;
@@ -154,7 +164,6 @@ public class CAHopeDataSourceUtils {
 			return null;
 	  }
 
-	@SuppressWarnings("unchecked")
 	public static boolean isArrayOrCollection( Object object )
 	{
 		if ( object == null ) return false;
@@ -162,7 +171,7 @@ public class CAHopeDataSourceUtils {
 		return ( object.getClass().isArray() || object instanceof Collection );
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	/**
 	 * Returns a JSONArray that contains some metadata about the columns.
 	 * Currrently includes information about the column name and data type.
@@ -202,7 +211,7 @@ public class CAHopeDataSourceUtils {
 //			columnMetaData.put( TYPE, columnDataType );
 //			
 //			columnDataArray.add( columnMetaData );
-			Map columnMetaData = new HashMap<String, Object>();
+			Map<String, Object> columnMetaData = new HashMap<String, Object>();
 			columnMetaData.put(NAME, column);
 			columnMetaData.put(TYPE, columnDataType);
 			columnDataArray.add(columnMetaData);

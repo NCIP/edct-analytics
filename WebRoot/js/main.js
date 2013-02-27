@@ -1,16 +1,13 @@
-/*****************************************************************************
-* The main "driver script" for the analytics application.
-* @author oawofolu
-* 
-//NOTES
-//=============================================================================
-// 1) In this application, base variables are used to denote two types of variables:
-// a) "independent" variables which are displayed on the charts, and
-// b) "filter" variables which are NOT displayed on the charts, but which are included in the filter control
-// and may be used for filtering.
-
-
-/***********************************************/
+/*******************************************************************************
+ *Copyright (c) 2013 HealthCare It, Inc.
+ *All rights reserved. This program and the accompanying materials
+ *are made available under the terms of the BSD 3-Clause license
+ *which accompanies this distribution, and is available at
+ *http://directory.fsf.org/wiki/License:BSD_3Clause
+ *
+ *Contributors:
+ *    HealthCare It, Inc - initial API and implementation
+ ******************************************************************************/
 /** Global Variables */
 /***********************************************/
 // Custom class package: com.healthcit.*
@@ -114,7 +111,7 @@ var joinContextFieldMap = { 'table' : 'FormTableRow', 'default' : 'Owner', 'modu
 // List of all the join columns: "Other"-related join variable (optional), Owner, Module, Form.
 var allJoinColumns = new Array();
 // A hash which contains metadata information about all the modules being reported on
-var appModuleMetadata = null;
+var appModuleMetadata = {};
 
 // FormTable-related variables
 var formTableMappings = {}; // a hash which maps questions to their source Collector tables, or none if no associated Collector table exists for the question 
@@ -484,10 +481,52 @@ function executeOnload(){
 	// Set up the variable which will store module metadata information
 	moduleMetadataService.loadModuleMetaData({
 			callback: function( data ){ 
+				
+				// 1. Populate the main hash for the metadata, appModuleMetadata.
+				
 				if ( data ) appModuleMetadata = eval('(' + data + ')'); 
+				
+				// 2. Add any additional metadata information
+				// that might be embedded within the user documents.
+				
+				var query = new google.visualization.Query(baseUrlString + 'caHopeDS?viewName=GetDocMetaData&group=true&orderedColumnNames=Field,Id,Name');
+				
+				query.setQuery('select Field, Id, Name');
+				
+			    query.send(function(response){
+			    	
+			    	 if (response.isError()) return;
+			    	 
+			    	 var supplementalData  = response.getDataTable();
+			    	 			    	 			    	 
+			    	 for ( var i = 0; i < supplementalData.getNumberOfRows(); ++i ) {
+			    		 var fieldType = supplementalData.getValue(i,0);
+			    		 
+			    		 var fieldId   = supplementalData.getValue(i,1);
+			    		 
+			    		 var fieldName = supplementalData.getValue(i,2);
+			    		 
+			    		 if ( !appModuleMetadata["forms"] ) {
+			    			 appModuleMetadata["forms"] = {};
+			    		 }
+			    		 
+			    		 if ( !appModuleMetadata["modules"] ) {
+			    			 appModuleMetadata["modules"] = {};
+			    		 }
+			    		 
+			    		 if ( fieldType == "Form" && !appModuleMetadata["forms"][fieldId]) {
+			    			 appModuleMetadata["forms"][fieldId] = { "id" : fieldId, "name" : fieldName };
+			    		 }
+			    		 
+			    		 if ( fieldType == "Module" && !appModuleMetadata["modules"][fieldId]) {
+			    			 appModuleMetadata["modules"][fieldId] = { "id" : fieldId, "name" : fieldName };
+			    		 }
+			    	 }
+			    });	
 			},
 			errorHandler: function( msg, exception ){ 
-				jAlert('Sorry, an error occurred while loading metadata - please contact your System Administrator.'); 
+				// 1. Display an alert message				
+				// jAlert('Sorry, an error occurred while loading metadata - please contact your System Administrator.');
 			}
 	});
 	
@@ -2048,8 +2087,8 @@ function updateDateFormatOptions(qId) {
 function goToQuestionAnchor(anchor){
 	var isHomePageLoaded = jQuery('#table_container').is(':visible');
 	if ( !isHomePageLoaded ){
-		// Alert the user to go to the "Create Reports" screen
-		jAlert('<b>To view a question selection, you must be on the "Create Reports" screen.</b>','ALERT');
+		// Redirect to the "Create Reports" screen
+		linkToCreateReports();
 	}
 
 	else {
@@ -2057,10 +2096,10 @@ function goToQuestionAnchor(anchor){
 		if ( !isAnchorVisible ) {
 			jQuery('a[name='+anchor+']').parentsUntil('tr').parent().show();
 		}
-		
-		window.location.hash = '#' + anchor;
-		removeOverlayScreen();
 	}
+	
+	window.location.hash = '#' + anchor;
+	removeOverlayScreen();
 }
 // end CONFIRMATION BOX
 
@@ -2936,9 +2975,11 @@ function setUpReportOptions( opts, reportType ){
 			axisFontSize: 11,
 			titleFontSize: 11,
 			cssClassNames: {hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader2', headerCell:'reportsTableHeaderCell2'},
-			width: 780,
-			height: (reportType ? getCurrentChartHeight(reportType) : 440)
-	};	
+			width: 780
+			};
+			if(parseInt(reportType) != 5){
+				reportConfigOptions.height = reportType ? getCurrentChartHeight(reportType) : 440;
+			}	
 }
 
 // Utililty Methods for setting up report controls
@@ -3341,9 +3382,8 @@ function formatColumn( dataTable, colIndex, associatedQuestionShortName ) {
 }
 
 // Apply appropriate formatting to the specified autogenerated field 
-function formatAutogeneratedColumn( dataTable, colIndex, associatedQuestionShortName ) {
-	var hsh = { 'Form': 'forms', 'Module': 'modules' };
-	var autoGenFieldMetaData = hsh[ associatedQuestionShortName ] ? appModuleMetadata[ hsh[ associatedQuestionShortName ] ] : null;
+function formatAutogeneratedColumn( dataTable, colIndex, autoGenField ) {
+	var autoGenFieldMetaData = getAutogeneratedFieldMetaData( autoGenField );
 	if ( autoGenFieldMetaData ) {
 		for ( var rowIndex = 0; rowIndex < dataTable.getNumberOfRows(); ++rowIndex ){
 			var value = dataTable.getValue( rowIndex, colIndex );	
@@ -3351,6 +3391,21 @@ function formatAutogeneratedColumn( dataTable, colIndex, associatedQuestionShort
 			if ( valueMetaData ) dataTable.setFormattedValue( rowIndex, colIndex, valueMetaData[ 'name' ] );
 		}
 	}
+}
+
+// Get the module metadata associated with this autogenerated field
+function getAutogeneratedFieldMetaData( autoGenField ) {
+	var hsh = { 'Form': 'forms', 'Module': 'modules' };	
+	var autoGenFieldMetaData = null;
+	
+	if ( hsh[ autoGenField ] ) {
+		// If the module metadata exists in a separate, self-contained document on the server,
+		// then get the metadata from the appModuleMetadata hash 
+		// which was previously used to store the data from that document
+		autoGenFieldMetaData = appModuleMetadata[ hsh[ autoGenField ] ] ;
+	}
+	
+	return autoGenFieldMetaData;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

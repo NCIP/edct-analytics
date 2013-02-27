@@ -1,5 +1,34 @@
+<%--
+Copyright (c) 2013 HealthCare It, Inc.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the BSD 3-Clause license
+which accompanies this distribution, and is available at
+http://directory.fsf.org/wiki/License:BSD_3Clause
+
+Contributors:
+    HealthCare It, Inc - initial API and implementation
+--%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <%@include file="/WEB-INF/includes/taglibs.jsp" %>
+<%@ page import="com.healthcit.analytics.service.UserService"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="org.springframework.context.ApplicationContext" %>
+
+<%
+ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
+UserService userService = (UserService)context.getBean("userService");
+%>
+
+<c:set var="authType"><%= userService.getAuthType()%></c:set>
+<c:choose>
+	<c:when test="${authType == 'ldap' }">
+		<c:url var="adminUrl" value="/ldap" />
+	</c:when>
+	<c:otherwise>
+		<c:url var="adminUrl" value="/admin" />
+	</c:otherwise>
+</c:choose>
+
 
 <html>
 <head>
@@ -93,6 +122,10 @@
 	    	<a href="#" class="current" id="welcome_container_tab" onclick="navigateToWelcome();">Home&nbsp;&nbsp;</a>
 	    	<a href="#" id="table_container_tab" onclick="linkToCreateReports();">Create Reports&nbsp;&nbsp;</a>
 	    	<a href="#" class="" id="reports_container_tab">View Reports&nbsp;&nbsp;</a>
+	    	<sec:authorize ifAnyGranted="ROLE_ADMIN">
+	    		<a href="${adminUrl}" class="" id="admin_tab">Admin&nbsp;&nbsp;</a>
+	    	</sec:authorize>
+	    	<a href="<c:url value="/logout"/>">Logout</a>
 	    	<!-- <a href="#" class="" id="documents_container_tab">Generate Documents&nbsp;&nbsp;</a> -->
 	    	<!-- <a href="#" class="" id="documents_container_tab">Documents</a> -->
 	    	</div>

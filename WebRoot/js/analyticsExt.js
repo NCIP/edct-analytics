@@ -1,3 +1,13 @@
+/*******************************************************************************
+ *Copyright (c) 2013 HealthCare It, Inc.
+ *All rights reserved. This program and the accompanying materials
+ *are made available under the terms of the BSD 3-Clause license
+ *which accompanies this distribution, and is available at
+ *http://directory.fsf.org/wiki/License:BSD_3Clause
+ *
+ *Contributors:
+ *    HealthCare It, Inc - initial API and implementation
+ ******************************************************************************/
 /**
  * Proprietary code for Analytics
  * @author oawofolu
@@ -157,6 +167,13 @@ function buildReportQuery(title){
 	return report; 
 }
 
+function validateName(e){
+	var key = window.event ? e.keyCode : e.which;
+	var keychar = String.fromCharCode(key);
+	reg = /[a-zA-Z0-9_-]{1}/;
+	return reg.test(keychar);
+}
+
 // Saves the current report query
 function saveReportQuery(){
 	var reportTitle = getSavedReportTitle(savedReport);
@@ -165,9 +182,10 @@ function saveReportQuery(){
 	
 	// Set up the Report Title Form
 	var htmlStr = "<form id=\"reportTitleForm\" style=\"display:none;\">";
-	htmlStr += "<div id=\"reportTitleFormErrorWarnings\"></div>"
+	htmlStr += "<div id=\"reportTitleFormErrorWarnings\"></div>";
 	htmlStr += "<label for=\"Title\">What is the Report Title?</label>";
-	htmlStr += "<input type=\"text\" name=\"reportTitleFld\" id=\"reportTitleFld\" class=\"text ui-widget-content ui-corner-all\" onblur=\"updateReportTitleErrorWarnings();\" value=\"\"/>";
+	htmlStr += "<input type=\"text\" name=\"reportTitleFld\" id=\"reportTitleFld\" class=\"text ui-widget-content ui-corner-all\" onblur=\"updateReportTitleErrorWarnings();\" onKeyPress=\"return validateName(event);\" value=\"\"/>";
+	htmlStr += ("<br/><input type=\"checkbox\" name=\"sharedQuery\" id=\"sharedQuery\"  onblur=\"updateReportTitleErrorWarnings();\"/> <span class=\"guidance\">Shared query</span>");
 	htmlStr += (savedReport ? "<br/><input type=\"checkbox\" name=\"useCurrentReportTitleFld\" id=\"useCurrentReportTitleFld\" onclick=\"setReportTitleAsCurrent();\"/>" : "");
 	htmlStr += (savedReport ? "<span class=\"guidance\">Update current report template</span>" : "");
 	htmlStr += "</form>";
@@ -183,6 +201,10 @@ function saveReportQuery(){
 			if ( ! isEmptyString(title) ){
 				// Construct the JSONObject which will be saved to the database
 				var newReportObject = {title:title,report:reportQuery,id:updateId};
+				var sharedQueryControl = jQuery("#sharedQuery");
+				if(sharedQueryControl){
+					newReportObject.sharedQuestion = sharedQueryControl.is(':checked');
+				}
 				
 				reportTemplateService.saveOrUpdateReportTemplate(
 						JSON.stringify(newReportObject),{
@@ -305,11 +327,13 @@ function displayGenericError(message,exception){
 
 function updateReportTitleErrorWarnings(){
 	var reportTitleFld = jQuery("#reportTitleFld");
+	var sharedQueryFld = jQuery("#sharedQuery");
 	if ( reportTitleFld ){
 		var title = reportTitleFld.val();
+		var shared = sharedQueryFld.is(':checked');
 		if ( !isEmptyString(title) ){
 			reportTemplateService.checkIfReportTitleExists(
-				title,{
+				title, shared,{
 					callback:checkIfReportTitleExistsCallback,
 					errorHandler:displayGenericError,
 					async:false
@@ -344,6 +368,11 @@ function displayReportCallBack(){
 		var isLastQuery = ( ctr == getHashSize(savedReportQueries)+1 );
 		htmlStr += "<div id=\"savedReportQuery_" + queryId + "\" class=\"item"; 
 		htmlStr += (isEvenNumber(ctr) ? " odd" : "") + (isLastQuery ? " last\"" : "\"") + ">";
+		if(!savedReportQueries[queryId]["shared"]){
+			htmlStr += "<span class=\"private\"></span>";
+		} else {
+			htmlStr += "<span class=\"non-private\"></span>";
+		}
 		htmlStr += "<span class=\"titleText\" onclick=\"generateSavedReport(" + queryId + ");\">";
 		htmlStr += savedReportQueries[queryId]["title"] + "</span>";
 		htmlStr += "<span class=\"delete\" title=\"Click to delete\" onclick=\"prepareForSavedReportQueryDelete(" + queryId + ");\">&nbsp;</span></div>";
@@ -351,7 +380,7 @@ function displayReportCallBack(){
 		var date = savedReportQueries[queryId]["timestamp"];
 		if ( date && date.indexOf(' ') > -1 ) date = Date.parse(date.split(' ')[0]).toString('dddd, MMMM d, yyyy'); 
 		htmlStr += "<b>Created on:&nbsp;&nbsp;&nbsp;</b><i>" + date + "</i><br/>";
-		htmlStr += "<b>Created by:&nbsp;&nbsp;&nbsp;</b><i>Anonymous</i><br/>";
+		htmlStr += "<b>Created by:&nbsp;&nbsp;&nbsp;</b><i>"+savedReportQueries[queryId]["ownerName"]+"</i><br/>";
 		htmlStr += "</span></div>";
 		++ctr;
 	}

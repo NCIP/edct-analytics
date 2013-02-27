@@ -1,5 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2013 HealthCare It, Inc.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause license
+ * which accompanies this distribution, and is available at
+ * http://directory.fsf.org/wiki/License:BSD_3Clause
+ * 
+ * Contributors:
+ *     HealthCare It, Inc - initial API and implementation
+ ******************************************************************************/
 package com.healthcit.analytics.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +23,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import com.healthcit.analytics.dao.ReportTemplateDao;
 import com.healthcit.analytics.dao.rowmapper.ReportTemplateRowMapper;
@@ -39,43 +53,37 @@ public class JdbcReportTemplateDAO implements MessageSourceAware, ReportTemplate
 	{
 		String sql = messageSource.getMessage(Constants.GET_REPORT_BY_ID_SQL, null, Locale.getDefault());
 		
-		List<Object> results = jdbcTemplate.query( sql, new Object[]{id}, new ReportTemplateRowMapper());
+		List<ReportTemplate> results = jdbcTemplate.query( sql, new Object[]{id}, new ReportTemplateRowMapper());
 		
-		return ( results.isEmpty() ? null : ( ReportTemplate )results.get( 0 ) );
+		return ( results.isEmpty() ? null : results.get( 0 ) );
 		
 	}
 
 	@Override
-	public ReportTemplate getReportTemplateByTitle(String title) 
+	public List<ReportTemplate> getReportTemplatesByTitle(String title) 
 	{
 		String sql = messageSource.getMessage(Constants.GET_REPORT_BY_TITLE_SQL, null, Locale.getDefault());
 		
-		List<Object> results = jdbcTemplate.query( sql, new Object[]{StringUtils.lowerCase( title )}, new ReportTemplateRowMapper());
+		List<ReportTemplate> results = jdbcTemplate.query( sql, new Object[]{StringUtils.lowerCase( title )}, new ReportTemplateRowMapper());
 		
-		return ( results.isEmpty() ? null : ( ReportTemplate )results.get( 0 ) );
+		return results;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ReportTemplate> findAllReportTemplates() 
+	public List<ReportTemplate> findAllReportTemplates(Long userId) 
 	{
 		String sql = messageSource.getMessage(Constants.GET_REPORTS_SQL, null, Locale.getDefault());
-		
-		List<Object> results = jdbcTemplate.query( sql, new ReportTemplateRowMapper());
-		
-		List<? extends Object> list = results;
-		
-		return (List<ReportTemplate>)list;
+		List<ReportTemplate> results = jdbcTemplate.query( sql, new ReportTemplateRowMapper(), new Object[]{userId});
+		return results;
 	}
 
 	@Override
-	public int saveReportTemplate(ReportTemplate template) 
+	public void saveReportTemplate(ReportTemplate template) 
 	{
 		String sql = messageSource.getMessage(Constants.SAVE_NEW_REPORT_SQL, null, Locale.getDefault());
-		
-		int numRowsInserted = jdbcTemplate.update( sql, new Object[]{ template.getTitle(), template.getReport() } );
-		
-		return numRowsInserted;
+		long id = jdbcTemplate.queryForLong( sql,  template.getTitle(), template.getReport(), template.getOwnerId(), template.isShared());
+		template.setId(id);
 	}
 
 	@Override
@@ -83,7 +91,7 @@ public class JdbcReportTemplateDAO implements MessageSourceAware, ReportTemplate
 	{
 		String sql = messageSource.getMessage(Constants.UPDATE_REPORT_BY_ID_SQL, null, Locale.getDefault());
 		
-		int numUpdatedRows = jdbcTemplate.update( sql, new Object[]{ template.getTitle(), template.getReport(), template.getId() } );
+		int numUpdatedRows = jdbcTemplate.update( sql, new Object[]{ template.getTitle(), template.getReport(), template.isShared(), template.getOwnerId(), template.getId() } );
 		
 		return numUpdatedRows;
 	}
@@ -93,7 +101,7 @@ public class JdbcReportTemplateDAO implements MessageSourceAware, ReportTemplate
 	{
 		String sql = messageSource.getMessage(Constants.UPDATE_REPORT_BY_TITLE_SQL, null, Locale.getDefault());
 		
-		int numUpdatedRows = jdbcTemplate.update( sql, new Object[]{ template.getReport(), template.getTitle() } );
+		int numUpdatedRows = jdbcTemplate.update( sql, new Object[]{ template.getReport(), template.isShared(), template.getOwnerId(), template.getTitle() } );
 		
 		return numUpdatedRows;
 	}
@@ -107,4 +115,5 @@ public class JdbcReportTemplateDAO implements MessageSourceAware, ReportTemplate
 		
 		return numUpdatedRows;
 	}
+	
 }
