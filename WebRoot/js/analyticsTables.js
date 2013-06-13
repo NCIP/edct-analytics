@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 /**
  * Code which handles incorporating table questions into the Analytics app.
  * @oawofolu
@@ -40,15 +31,15 @@ function handleFormTableQueryResponse( response ) {
     }
 
 	var data  = response.getDataTable();
-	
+
 	// Construct the FormTable metadata object
 	for ( var i = 0; i < data.getNumberOfRows(); ++i ) {
 		var key = data.getValue( i, 0 );
 		var value = new Array();
-		
+
 		// If the key does not already exist in the hash, then generate a new key-value pair
 		if ( !formTableMappings[ key ] ) formTableMappings[ key ] = new Array();
-		
+
 		for ( var j = 1; j <= data.getNumberOfColumns(); ++j ) {
 			if ( j == data.getNumberOfColumns() ) {
 				formTableMappings[ key ].push( value );
@@ -72,13 +63,13 @@ function handleFormTableQueryResponse( response ) {
  */
 function getFormTableHTMLSection( qId ){
 	var htmlStr = '';
-	
+
 	if ( isAssociatedWithBothTableAndNonTableData( qId ) ) {
 		htmlStr += '<div class="questionTypeSelectChild5" id="tableDiv_' + qId +'">';
 		htmlStr += '<span>Tables:&nbsp;</span><select class="tabledata_select" name="tabledata_' + qId +'" id="tabledata_' + qId +'" onchange="updateDataType(\'' + qId + '\',\'string\')"><option value="table">Include table data only</option><option value="nontable">Include non-table data only</option><option value="both">Include both table and non-table data</option></select>'
 		htmlStr += '</div>';
 	}
-	
+
 	return htmlStr;
 }
 
@@ -97,7 +88,7 @@ function validateTableContexts(qId){
 	var qIdCheckboxPrefix = qId ? 'check_' + qId : null;
 	var qIdElm = qIdCheckboxPrefix ? jQuery('#'+qIdCheckboxPrefix) : null;
 	var canRepairError = !!qIdElm; // flag indicating whether or not validation errors should be repaired by automatically updating the DOM
-	
+
 	var existsTableContext = existsTableContextInCurrentQuery();
 	var canValidateTableQuestion = ( isComplexFormTableQuestion(qId)  && !isIdentifyingColumn(qId) ) ||
 								   ( isSimpleFormTableQuestion(qId) && isIdentifyingColumn(qId) );
@@ -105,7 +96,7 @@ function validateTableContexts(qId){
 	if ( existsTableContext && canDoValidation ){
 		var allSelectedQuestions = getAllSelectedQuestions();
 		var tableIds = getTableIdsForQuestions( allSelectedQuestions );
-		
+
 		// 1) Validate that there is only one table context associated with the current query
 		if ( compactArray( tableIds ).unique().length > 1 ) {
 			errorMsgStr += '-Selected questions must not come from different Form Tables.<br/>';
@@ -114,7 +105,7 @@ function validateTableContexts(qId){
 				return errorMsgStr;
 			}
 		}
-		
+
 		else {
 			var tableJoinContexts = new Array();
 			var isIndependentOrFilterTableQuestionSelected = false;
@@ -125,11 +116,11 @@ function validateTableContexts(qId){
 			var tableShortName = compactArray(getTableShortNamesForQuestions( allSelectedQuestions ))[ 0 ];
 			var isComplexTbl = isComplexFormTableQuestion(qId);
 			var isSimpleTbl = isSimpleFormTableQuestion(qId);
-			
+
 			for ( var i = 0; i < allSelectedQuestions.length; ++i ) {
 				var currentQId = allSelectedQuestions[ i ];
 				var currentHasTableContext = hasTableContext( currentQId );
-				
+
 				if ( !identifyingColumn ) {
 					identifyingColumn = getAssociatedIdentifyingColumn( currentQId );
 					isSelectedIdentifyingColumnAsIndFilt = ( identifyingColumn &&
@@ -139,14 +130,14 @@ function validateTableContexts(qId){
 												  arrayContains( allSelectedQuestions, identifyingColumn ) &&
 					                              (isDependentVariable( identifyingColumn )));
 				}
-				
+
 				// 1) Validate that all the dependent variables have table context
 				if ( isDependentVariable( currentQId ) && !currentHasTableContext ) {
 					errorMsgStr += '-<b>' + getQuestionShortName( currentQId ) + '</b> cannot be selected as a dependent variable because it is not associated with the Form Table <b>' + tableShortName + '</b>.<br/>';
 				}
-				
+
 				// 2) Validate that when the table context is associated with a complex table that has an "identifying column",
-				// the identifying column has been selected as an independent/filter variable				
+				// the identifying column has been selected as an independent/filter variable
 				if ( identifyingColumn && !isSelectedIdentifyingColumnAsIndFilt && currentHasTableContext && isComplexTbl ) {
 					if ( canRepairError ) {
 						// Proceed to make the identifying column an independent variable
@@ -161,7 +152,7 @@ function validateTableContexts(qId){
 						if ( errorMsgStr.indexOf( error ) == -1 ) errorMsgStr += error;
 					}
 				}
-								
+
 				// 3) Validate that when the leading column of a single table is selected,
 				// the associated "_Answers" column has been selected as a dependent variable
 				if ( identifyingColumn && isSelectedIdentifyingColumnAsIndFilt && currentHasTableContext && isSimpleTbl ) {
@@ -180,7 +171,7 @@ function validateTableContexts(qId){
 						// else, do nothing. This may be an unlikely query, but it should still be permissible.
 					}
 				}
-			
+
 				// 4) Validate that all the questions with table context have the same join context
 				if ( currentHasTableContext ) {
 					var currentJoinContext = getQuestionSelectedJoinContext( currentQId );
@@ -189,7 +180,7 @@ function validateTableContexts(qId){
 				if ( i == allSelectedQuestions.length - 1 && compactArray(tableJoinContexts).unique().length > 1 ) {
 					errorMsgStr += '-Questions that come from a Form Table should have the same <b>Group By</b> context.<br/>';
 				}
-								
+
 				// 5) Validate that at least 1 independent/filter variable has table context
 				if ( (isIndependentVariable( currentQId ) || isFilterVariable( currentQId )) && currentHasTableContext ) {
 					isIndependentOrFilterTableQuestionSelected = true;
@@ -198,9 +189,9 @@ function validateTableContexts(qId){
 				{
 					errorMsgStr += '-At least <b>1</b> independent/filter variable should come from a Form Table when other Form Table questions have been selected.<br/>';
 				}
-				
+
 			}
-		}	
+		}
 	}
 	return errorMsgStr;
 }
@@ -217,17 +208,17 @@ function validateTableContexts(qId){
  */
 function getFormTableMetaData( qid ) {
 	var qIdMetaData = formTableMappings[ qid ];
-	
+
 	if ( qIdMetaData ) {
 		for ( var i = 0; i < qIdMetaData.length; ++i ) {
 			var tableType = '' + qIdMetaData[i][FORMTABLE_MAPPING_VIEW_TABLETYPE_INDEX];
 			var tableShortName = '' + qIdMetaData[i][FORMTABLE_MAPPING_VIEW_SHORTNAME_INDEX];
-			var isEmptyVal = arrayContains( ['null','undefined',''], tableType ) || 
+			var isEmptyVal = arrayContains( ['null','undefined',''], tableType ) ||
 							 arrayContains( ['null','undefined',''], tableShortName );
 			if ( !isEmptyVal ) return qIdMetaData[i];
 		}
 	}
-	
+
 	return [ 'null', 'null', 'null', 'null' ];
 }
 
@@ -236,7 +227,7 @@ function getFormTableMetaData( qid ) {
  */
 function isAssociatedWithNonFormTableData( qId ) {
 	var qIdMetaData = formTableMappings[ qId ];
-	
+
 	if ( qIdMetaData ) {
 		for ( var i = 0; i < qIdMetaData.length; ++i ) {
 			var tableType = '' + qIdMetaData[i][FORMTABLE_MAPPING_VIEW_TABLETYPE_INDEX];
@@ -244,8 +235,8 @@ function isAssociatedWithNonFormTableData( qId ) {
 			if ( isEmptyVal ) return true;
 		}
 	}
-	
-	return false;  
+
+	return false;
 }
 
 /**
@@ -302,7 +293,7 @@ function getFormTableType(qId) {
 	for ( var i = 0; i < formTableMetaData.length; ++i ) {
 		var val = formTableMetaData[ FORMTABLE_MAPPING_VIEW_TABLETYPE_INDEX ];
 		if ( !!val ) return (val == 'null' ? null : val);
-	}	
+	}
 	return null;
 }
 
@@ -325,7 +316,7 @@ function isSimpleFormTableQuestion(qId){
 }
 
 /**
- * Returns whether this question is from a "Complex" table 
+ * Returns whether this question is from a "Complex" table
  */
 function isComplexFormTableQuestion(qId){
 	var formTableType = getFormTableType( qId );
@@ -349,16 +340,16 @@ function getJoinMethodForFormTableQuestions(){
  **/
 function hasTableContext( qId ) {
 	if ( !qId ) return false;
-	
+
 	// if the question is not associated with any form data, then return false
 	if ( !isFormTableQuestion( qId ) ) return false;
-	
+
 	// else, if the question is associated with both form data and non-form data,
 	// return true if the appropriate field(s) in the UI have been selected
 	if ( isAssociatedWithNonFormTableData( qId ) ) {
 		return jQuery('#tabledata_'+qId).val() != getNonTableDataOnlyContextType();
 	}
-	
+
 	// else, return true
 	return true;
 }
@@ -371,14 +362,14 @@ function getFormTableContextTypeForQuestion( qId ) {
 }
 
 /**
- * Returns the table context type selection which matches only data from questions that come from FormTables 
+ * Returns the table context type selection which matches only data from questions that come from FormTables
  */
 function getTableDataOnlyContextType() {
 	return 'table';
 }
 
 /**
- * Returns the table context type selection which matches only data from questions that do NOT come from FormTables 
+ * Returns the table context type selection which matches only data from questions that do NOT come from FormTables
  */
 function getNonTableDataOnlyContextType() {
 	return 'nontable';

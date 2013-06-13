@@ -1,13 +1,10 @@
-<%--
-Copyright (c) 2013 HealthCare It, Inc.
-All rights reserved. This program and the accompanying materials
-are made available under the terms of the BSD 3-Clause license
-which accompanies this distribution, and is available at
-http://directory.fsf.org/wiki/License:BSD_3Clause
+<%--L
+  Copyright HealthCare IT, Inc.
 
-Contributors:
-    HealthCare It, Inc - initial API and implementation
---%>
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/edct-analytics/LICENSE.txt for details.
+L--%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <%@include file="/WEB-INF/includes/taglibs.jsp" %>
 <%@ page import="com.healthcit.analytics.service.UserService"%>

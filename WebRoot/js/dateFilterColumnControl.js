@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 var DEFAULT_DATE_REGEX = /([0-9]?[0-9])\/([0-9]?[0-9])\/([0-9]?[0-9]?[0-9][0-9])/; //MM/dd/yyyy
 
 /*======================================================= */
@@ -19,13 +10,13 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	initialize: function(container) {
 	    this.containerElement = container;
 	},
-	
+
 	draw : function(data, options) {
 	    var simpleOperatorLabels = { gt: "Later than", ge: "Later than or equal to", eq: "Equal to", ne: "Not Equal to", lt: "Earlier than", le: "Earlier than or equal to", btw: "Between" };
 	    if (options.inheritedOptions && options.inheritedOptions.simpleOperatorLabels) {
 	        simpleOperatorLabels = options.inheritedOptions.simpleOperatorLabels;
 	    }
-	
+
 	    var columnIndex = options.assignedColumnIndex;
 	    this.selectionElement = "filter_item_" + columnIndex;
 	    this.textInputElement = "filter_item_value_" + columnIndex;
@@ -33,7 +24,7 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	    this.secondCompareTextInputElement = "filter_item_second_compare_value_" + columnIndex;
 	    this.textInputElementContainer = "filter_item_value_" + columnIndex + "_container";
 	    this.compareTextInputElementContainer = "filter_item_compare_value_" + columnIndex + "_container";
-	
+
 	    var html = "Operator<br/>";
 	    html += "<select id='" + this.selectionElement + "'>";
 	    html += "<option></option>";
@@ -47,14 +38,14 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	    html += "</select>";
 	    html += "<span id='" + this.textInputElementContainer + "'><br/>Compare Value<br/><input type='text' id='" + this.textInputElement + "'><span class=\"dateformat\"><br/>*MM/DD/YYYY</span></span>";
 	    html += "<span id='" + this.compareTextInputElementContainer + "' style='display:none;'><br/>Between<br/><input type='text' id='" + this.firstCompareTextInputElement + "'><span class=\"dateformat\"><br/>*MM/DD/YYYY</span><br/>And<br/><input type='text' id='" + this.secondCompareTextInputElement + "'><span class=\"dateformat\"><br/>*MM/DD/YYYY</span></span>";
-	
+
 	    this.containerElement.innerHTML = html;
 	},
-	
+
 	isActive: function() {
 	    return (($(this.textInputElement).value || ($(this.firstCompareTextInputElement).value && $(this.secondCompareTextInputElement).value) ) && $(this.selectionElement).selectedIndex);
 	},
-	
+
 	passes: function(value) {
 	    if (this.isActive()) {
 	        var compareInput = $(this.textInputElement);
@@ -73,7 +64,7 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	    }
 	    return true;
 	},
-	
+
 	resetFilter: function() {
 	    var selectOperation = $(this.selectionElement);
 	    for (var i = 0; i < selectOperation.options.length; i++) {
@@ -83,7 +74,7 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	    $(this.firstCompareTextInputElement).value = "";
 	    $(this.secondCompareTextInputElement).value = "";
 	},
-	
+
 	compare: function(value, operator, filterValue, secondFilterValue) {
 		switch (operator) {
 	        case "GT" : return value > filterValue;
@@ -92,17 +83,17 @@ com.healthcit.SimpleDateFilterColumnControl = Class.create({
 	        case "NE": return value != filterValue;
 	        case "LT" : return value < filterValue;
 	        case "LE": return value <= filterValue;
-	        case "BTW": return ( secondFilterValue > filterValue ? 
+	        case "BTW": return ( secondFilterValue > filterValue ?
 	        		             value >= filterValue && value <= secondFilterValue :
 	        		             value >= secondFilterValue && value <= filterValue );
 	    }
 	    return true;
 	},
-	
+
 	convertStringToDate: function( dateStr ) {
 		return this.convertStringToDateWithFormat( dateStr, DEFAULT_DATE_REGEX );
 	},
-	
+
 	convertStringToDateWithFormat: function( dateStr, dateFormat ) {
 		if ( dateStr ) {
 			var dateComponents = dateStr.match( dateFormat );

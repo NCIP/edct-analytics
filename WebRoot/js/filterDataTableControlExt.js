@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 /*====================================================================*/
 // Override the registerEvents method in the main FilterDataTableControl control
 // so that the filter control is automatically collapsed
@@ -23,7 +14,7 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
 	        $("org-systemsbiology-visualization-filtercontainer-header-titlelink").innerHTML = this.getTitleHtml();
 		}
 	},
-	
+
 	toggleContainerClose: function(){
 		if ( this.openFilterContainer ){
 			this.openFilterContainer = false;
@@ -33,11 +24,11 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
 	        $("org-systemsbiology-visualization-filtercontainer-header-titlelink").innerHTML = this.getTitleHtml();
 		}
 	},
-	
-	
+
+
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	// EXISTING version of registerEvents
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/	
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	registerEvents: function (selectedColumnIndexes) {
     var control = this;
     var listenerOptions = {
@@ -56,16 +47,16 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
     }, listenerOptions);
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	// END EXISTING version of registerEvents
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/	
-	
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 	//This listener is custom to account for removing the filter tab highlighting when Clear All is clicked
     this.addOnClickEventListener($("org-systemsbiology-visualization-clear"), function () {
         control.resetFilterAndFixHighlight();
     });
-	
+
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	// EXISTING version of registerEvents
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/	
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     this.addOnClickEventListener($("org-systemsbiology-visualization-filtercontainer-header-titlelink"), function () {
         control.toggleContainer();
     }, listenerOptions);
@@ -102,7 +93,7 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
         }
     var getOnSelectorClickChangeResetter = function (columnIndex) {
             return function () {
-			
+
                 // take care of visualizing container
                 var currentResetter = $("org-systemsbiology-visualization-filteritem-resetter-" + columnIndex);
                 var previousResetter = $(control.resetFilterItemButton);
@@ -123,7 +114,7 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
             return function () {
 				/*remove corresponding highlighted tab when clear button is clicked*/
 				removeFilter(columnIndex);
-				
+
                 var fcc = control.filterColumnControlByColumnIndex.get(columnIndex);
                 fcc.resetFilter();
                 control.applyFilter();
@@ -141,11 +132,11 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
 },
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 // END EXISTING version of registerEvents
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/		
-	
-	resetFilter : function() {	
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+	resetFilter : function() {
 		//this.toggleContainerClose(); // added code to collapse the filter control when submitting new filter criteria
-		
+
 
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		// EXISTING version of resetFilter()
@@ -156,37 +147,37 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
         });
 
         this.propagate(this.data);
-        
+
         /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		// END EXISTING version of resetFilter()
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     },
-	
+
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		// 	CUSTOM resetFilterAndFixHighlight()
-		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/		
-		resetFilterAndFixHighlight : function() {	
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+		resetFilterAndFixHighlight : function() {
 		//this.toggleContainerClose(); // added code to collapse the filter control when submitting new filter criteria
-		
+
 			removeFilter();	//remove highlighted tab on Clear All
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
         this.clearMappings();
-		
+
         this.filterColumnControlByColumnIndex.values().each(function(filterColumnControl) {
             filterColumnControl.resetFilter();
         });
 
         this.propagate(this.data);
-        
+
         /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		// END CUSTOM version of resetFilterAndFixHighlight()
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     },
-	
-	applyFilter: function() {	
+
+	applyFilter: function() {
 		//this.toggleContainerClose(); /* added code to collapse the filter control when submitting new filter criteria*/
-		
+
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		// EXISTING version of applyFilter()
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -197,7 +188,7 @@ org.systemsbiology.visualization.FilterDataTableControl.addMethods({
         this.filterColumnControlByColumnIndex.keys().each(function(columnIndex) {
             var fcc = control.filterColumnControlByColumnIndex.get(columnIndex);
             if (fcc.isActive()) {
-				
+
                 activeFilters[activeFilters.length] = columnIndex;
                 control.toggleContainerClose(); /* added code to collapse the filter control when submitting new filter criteria*/
 

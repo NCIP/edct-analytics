@@ -1,16 +1,7 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 jQuery(document).ready(function(){
 	jQuery(".showFilterLink").live("click", function() {
-		moveClearBox();	
+		moveClearBox();
 		adjustFilterHeights();
 		enhanceFilter();
 		autoScrollTabs();
@@ -65,16 +56,16 @@ function fancyDates(){
 	});
 }
 
-function autoScrollTabs(){	
+function autoScrollTabs(){
 	//aribrarilly do autoscrolling if more than 15 filter buttons, can change to any number
 	if(jQuery("#org-systemsbiology-visualization-filtercontainer-filterlist li a").length>15){
 		jQuery('#org-systemsbiology-visualization-filtercontainer-header-titlelink').append(" <span id='scroll-message'>(use your mouse to horizontally scroll to more tabs)</span>");
-	
+
 		var ul = jQuery('#org-systemsbiology-visualization-filtercontainer-filterlist');
 
 		ul.css("padding-left", "100px");
 		ul.css("width", "2000px");
-    
+
 		var div = jQuery('#org-systemsbiology-visualization-filtercontainer-menu');
 		var divWidth = div.width();
 

@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 /**
  * Script which handles table pagination in the Analytics application.
  * @author oawofolu
@@ -25,13 +16,13 @@ var reportTableRowElements = null; // DOM elements representing the set of table
  * Adds a client-side paginator to the "reportTable" visualization
  */
 function setUpReportTablePaginator() {
-	
+
 	var tableRows = getPaginateableTableRowElements();
-	
+
 	var totalNumberOfTableRows = tableRows.length;
-	
+
 	var totalNumberOfPages = Math.ceil(totalNumberOfTableRows/NUM_TABLE_RECORDS_PER_PAGE);
-	
+
 	if ( totalNumberOfTableRows > 0 )
 	{
 		initializeReportTablePaginatorContainer();
@@ -42,15 +33,15 @@ function setUpReportTablePaginator() {
 			border					: true,
 			border_color			: 'black',
 			text_color  			: 'black',
-			background_color    	: '#E6E5F3',	
+			background_color    	: '#E6E5F3',
 			border_hover_color		: 'black',
 			text_hover_color  		: '#000',
-			background_hover_color	: '#fff', 
+			background_hover_color	: '#fff',
 			images					: false,
 			mouse					: 'press',
 			onChange     			: function(page){ displayReportTableRowSubset(page); }
 		});
-	
+
 	}
 }
 
@@ -90,7 +81,7 @@ function initializeReportTablePaginatorContainer(){
 function getPaginateableTableRowElements(){
 	if ( !reportTableRowElements ) {
 		reportTableRowElements = getAllReportTableRowElements();
-	}	
+	}
 	return reportTableRowElements;
 }
 

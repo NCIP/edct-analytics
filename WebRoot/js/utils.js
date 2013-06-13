@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 /*Date functions*/
 var gsMonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 
@@ -15,13 +6,13 @@ var gsDayNames = new Array('Sunday','Monday','Tuesday','Wednesday','Thursday','F
 
 Number.prototype.zf = function(num){
 	if ( !this ) return num;
-	
+
 	var numString = this.toString();
-	
+
 	while ( numString.length < num ) {
 		numString = '0' + numString;
 	}
-	
+
 	return numString;
 }
 
@@ -109,7 +100,7 @@ $.download = function (url, data, method, callback) {
         iframeX = jQuery('<iframe src="[removed]false;" name="iframeX" id="iframeX"></iframe>').appendTo('body').hide();
         iframeX.ready(function(){
         	if ( callback ) callback();
-    	}); 
+    	});
 
         //split params into form inputs
         jQuery.each(data, function (p, val) {
@@ -128,7 +119,7 @@ function destroyObject( obj ){
 		for ( var property in obj )
 		{
 			obj[ property ] = null;
-		}	
+		}
 		obj = null;
 	}
 }
@@ -243,15 +234,15 @@ function invokeAttachedDOMEvent(elm,callback){
 	if ( callback && typeof callback == 'function' ) callback.call();
 }
 
-// Function which updates the given DOM element as if it were being updated by a user interacting 
+// Function which updates the given DOM element as if it were being updated by a user interacting
 // with the client browser
 function simulateBrowserUpdate(elmId,value,excludeDomEvent,domEventDelay,callbackFunc){
 	// get the associated question ID
 	var qId = getQuestionIDfromDOMID( elmId );
-	
+
 	// show the spinner for this question
 	showSpinner('spinner_'+qId);
-	
+
 	var elm = jQuery('#'+elmId);
 	var elmType = elm.attr('nodeName');
 	// if the referenced element is a checkbox then update the "checked" value
@@ -265,26 +256,26 @@ function simulateBrowserUpdate(elmId,value,excludeDomEvent,domEventDelay,callbac
 	else{
 		elm.val(value);
 	}
-	
+
 	// invoke the onclick/onchange events associated with this element, if applicable
 	if ( ! excludeDomEvent ) {
 		invokeAttachedDOMEvent(elm);
 		//insert a brief delay
 		simulatedSleep(domEventDelay ? domEventDelay : 'extrafast');
 	}
-	
+
 	// invoke the callback function, if applicable
 	if ( callbackFunc ) {
 		return callbackFunc.call();
 	}
-	
+
 	// hide the spinner for this question
 	hideSpinner('spinner_'+qId);
 }
 
 // Case-insensitive version of the JQuery "contains" selector
-jQuery.expr[':'].Contains = function(a, i, m) { 
-  return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0; 
+jQuery.expr[':'].Contains = function(a, i, m) {
+  return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 // Utility function which will cause this element to blink once
@@ -341,7 +332,7 @@ function getKeys(hsh)
 
 // Utility function which "compacts" an array ( returns the array without any null elements )
 function compactArray( arr ) {
-	var compacted = arr.filter(function(elm){ return (elm != null);});  
+	var compacted = arr.filter(function(elm){ return (elm != null);});
 	return compacted;
 }
 

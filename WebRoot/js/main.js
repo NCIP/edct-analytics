@@ -1,13 +1,4 @@
-/*******************************************************************************
- *Copyright (c) 2013 HealthCare It, Inc.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the BSD 3-Clause license
- *which accompanies this distribution, and is available at
- *http://directory.fsf.org/wiki/License:BSD_3Clause
- *
- *Contributors:
- *    HealthCare It, Inc - initial API and implementation
- ******************************************************************************/
+
 /** Global Variables */
 /***********************************************/
 // Custom class package: com.healthcit.*
@@ -20,7 +11,7 @@ var baseUrlString = window.location.pathname;
 var STANDARDQUESTION_ID_LENGTH = 36;
 var SIMPLETABLEANSWER_ID_LENGTH = 42;
 
-//Configure number of answers to be shown on each iteration of results	
+//Configure number of answers to be shown on each iteration of results
 var globalResultsAtOnce = 4; //columns work better if this number is even
 var	showMoreIsHidden = false;
 
@@ -114,7 +105,7 @@ var allJoinColumns = new Array();
 var appModuleMetadata = {};
 
 // FormTable-related variables
-var formTableMappings = {}; // a hash which maps questions to their source Collector tables, or none if no associated Collector table exists for the question 
+var formTableMappings = {}; // a hash which maps questions to their source Collector tables, or none if no associated Collector table exists for the question
 
 // Array of answers UI elements
 var answers = new Array();
@@ -128,17 +119,17 @@ var answers = new Array();
 // Displays welcome section
 function navigateToWelcome(){
 	// Display a a message overlay
-	overlayScreen('Redirecting to Home Page. Please wait...');	
+	overlayScreen('Redirecting to Home Page. Please wait...');
 	simulatedSleep(1000);
-	
+
 	// Refresh the screen
 	window.location.reload(true);
 	// Reset the application's state
 	// resetApp();
-	
+
 	// show the Welcome section
 	showAnalyticsSection(['welcome_container','welcomeMessageContainer']);
-	
+
 	// get the full list of saved report queries
 	generateAllReportQueries();
 }
@@ -152,10 +143,10 @@ function navigateToCreateReports(){
 function linkToCreateReports(){
 	// Apply "bounce" effect to the link
 	jQuery('#link_create_new_reports').effect("bounce", { times:5 }, 300);
-	
+
 	// Redirect
-	setTimeout(function(){navigateToCreateReports()},500);	
-	
+	setTimeout(function(){navigateToCreateReports()},500);
+
 	if ( !isReportTableReady ) {
 		overlayScreen('Loading questions. Please wait...');
 	}
@@ -174,10 +165,10 @@ function navigateToViewReports(){
 function showAnalyticsSection(sections){
 	// show an overlay message while the Home Page loads
 	overlayCurrentPage(sections);
-	
+
 	// insert delay
 	simulatedSleep(300);
-	
+
 	// show the "Loading" image while the reporting graphic is still loading
 	showSpinner('reports_container_spinner');
 	// clear the contents of the reports section
@@ -211,21 +202,21 @@ function finalizeQuestionTableSetUp(sections) {
 		var checkedQIdTableRows = jQuery('input[type=checkbox][id^=check_]:checked').parentsUntil('tr').parent();
 		setReportTableRowElementVar( checkedQIdTableRows );
 	}
-	
+
 	// set up pagination if appropriate
 	if ( arrayContains(sections,'table_container') && isReportTableReady ) {
 		resetTablePaginator();
 	}
-	
+
 	else {
 		removePaginator();
 	}
-	
+
 	// display the "Answers" column if appropriate
 	if ( arrayContains(sections,'table_container') && isReportTableReady ) {
 		showHideAnswersColumn();
 	}
-	
+
 }
 
 
@@ -238,14 +229,14 @@ function overlayCurrentPage(sections){
 	var waitMsg;
 	var viewReportsWaitMsg = 'Generating report...';
 	var createReportsWaitMsg = 'Setting up query template...';
-	
+
 	if ( arrayContains(sections,'reports_container') ) {
 		waitMsg = viewReportsWaitMsg;
 	}
 	else if ( arrayContains(sections,'table_container') && wasSavedReportLoaded ) {
 		waitMsg = createReportsWaitMsg;
 	}
-	
+
 	if ( waitMsg ) {
 		simulatedSleep(300);
 		overlayScreen(waitMsg);
@@ -253,17 +244,17 @@ function overlayCurrentPage(sections){
 }
 
 function doShowHide( sections ) {
-	
+
 	if ( sections && sections.length != 0 ){
 		var visibleSelectorStr = '';
 		var hiddenSelectorStr = '';
-		
+
 		for ( var i = 0 ; i < sections.length; ++i ) {
 			visibleSelectorStr += '[id!=' + sections[i] + ']';
 		}
 		jQuery('.container' + visibleSelectorStr + ':visible').toggle(1000);
 		jQuery('.container' + visibleSelectorStr).slideUp();
-			
+
 		for ( var i = 0 ; i < sections.length; ++i ) {
 			jQuery('.container[id=' + sections[i] + ']:hidden').toggle(1000);
 		}
@@ -279,7 +270,7 @@ function doShowHide( sections ) {
 function updateMenus( sections ) {
 	// find the value of the element Id to be highlighted as the current tab
 	var menuId = findCurrentMenuTab( sections );
-	
+
 	// if the element Id was found then set it up as the current menu item
 	if ( menuId ) setAsCurrentMenuTab( menuId, 'menu_container' );
 }
@@ -291,13 +282,13 @@ function updateSubMenus( sections ){
 	                                              {'list_table_questions_tab':'List Tables'} ]};*/
 	var listSearchTabHtml = '<span id="searchFormStatusFld"></span><span class="searchIconImg" onclick="showSearchBoxes(\'table_container_content\',\'table_container\');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="searchLabel">&nbsp;Search&hellip;</span>';
 	var subMenuHash = { 'table_container' : [ {'list_search_tab': listSearchTabHtml } ]};
-		
+
 	// find the currently selected menu item
-	var menuId = findCurrentMenuTab( sections );	
+	var menuId = findCurrentMenuTab( sections );
 	var hasSubMenu = menuId ? subMenuHash[menuId] : false;
 	if ( hasSubMenu ) {
 		// set up the submenu list
-		var subMenuList = subMenuHash[menuId]; 
+		var subMenuList = subMenuHash[menuId];
 		var subMenuHtml = '';
 		var subMenuId = '';
 		subMenuHtml += '<div class="tabs">';
@@ -308,10 +299,10 @@ function updateSubMenus( sections ){
 				subMenuHtml += '>' + subMenuList[i][elmId] +'</span>';
 				if ( i==0 ) subMenuId = elmId;
 			}
-		}	
+		}
 		subMenuHtml += '</div>';
 		jQuery('#submenu_container').html(subMenuHtml);
-		
+
 		// set the current submenu selection
 		setAsCurrentMenuTab( subMenuId, 'submenu_container' );
 	} else{
@@ -324,7 +315,7 @@ function findCurrentMenuTab( sections ) {
 	for ( var i = 0; i < sections.length; ++i ) {
 		if (jQuery('#' + sections[i] + '_tab')) {
 			return sections[i];
-		} 
+		}
 	}
 }
 
@@ -353,12 +344,12 @@ function setAsCurrentMenuTab(divId,menuStyleClass) {
 function preHandleCallback() {
   // show the "Loading" image while the reporting graphic is still loading
   showSpinner('table_container_spinner');
-  
+
   // prepare all objects that will be required before running the query that generates questions
   var query = new google.visualization.Query(baseUrlString + 'caHopeDS?viewName=GetQuestionDataType&group=true&orderedColumnNames=QId,TableType,DType,QTotal&numericDataType=QTotal');
-  query.setQuery('select QId,TableType,DType,QTotal');					  
-  query.send(preHandleCallbackResponse);					  
-}  		
+  query.setQuery('select QId,TableType,DType,QTotal');
+  query.send(preHandleCallbackResponse);
+}
 
 function preHandleCallbackResponse(response) {
 	if (response.isError()) {
@@ -367,7 +358,7 @@ function preHandleCallbackResponse(response) {
     }
 
 	var data  = response.getDataTable();
-	
+
 	// Populate hash which keeps track of the number of data types available for each question
 	for ( var num = 0; num < data.getNumberOfRows(); ++num ){
 		var qId = data.getValue(num,0);
@@ -376,92 +367,92 @@ function preHandleCallbackResponse(response) {
 		var total = data.getValue(num,3);
 		questionDataTypes[qId + PIPES + datatype + (tableType && tableType!='null' ? tableType : '')] = total;
 	}
-	
+
 	// Get Form Table metadata
 	var formTableQuery = new google.visualization.Query(baseUrlString + 'caHopeDS?viewName=GetAllQuestionsWithAssociatedTables&group=true&orderedColumnNames=Id,FormTableType,FormTableId,FormTableShortName,IdentifyingCol');
 	formTableQuery.setQuery('select Id,FormTableType,FormTableId,FormTableShortName,IdentifyingCol');
 	formTableQuery.send(handleFormTableQueryResponse);
-  
+
 	// Get List of Questions
     var query = new google.visualization.Query(baseUrlString + 'caHopeDS?viewName=GetAllQuestions&group=true&orderedColumnNames=Id,ShortName,Text,SearchMetaData,TableMetaData');
-	query.setQuery('select Id, ShortName, Text, SearchMetaData, TableMetaData');					  
-    query.send(handleQueryResponse);	
-    
+	query.setQuery('select Id, ShortName, Text, SearchMetaData, TableMetaData');
+    query.send(handleQueryResponse);
+
     // Perform any other "onload"-related functions
     executeOnload();
-} 
-			  
+}
+
 function handleQueryResponse(response) {
     if (response.isError()) {
 	  jAlert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 	  return;
     }
 
-    var data  = response.getDataTable();	
-    
+    var data  = response.getDataTable();
+
     var formatter1 = new google.visualization.PatternFormat(
     	"<a name=\"anchor_{0}\"></a>" +
-    	"<input class=\"shortNameToggle\" type=\"checkbox\" id=\"check_{0}\"" + 
+    	"<input class=\"shortNameToggle\" type=\"checkbox\" id=\"check_{0}\"" +
     	"onclick=\"addAnswersBlock('{0}')\" value=\"{1}\"/>&nbsp;" +
     	"{1}<span id=\"spinner_{0}\" class=\"spinner\" style=\"display:none;\">&nbsp;&nbsp;</span><br/><div id=\"div_{0}\"></div>");
-    
+
     formatter1.format( data, [0,1], 1 );
-    
+
     var formatter2 = new google.visualization.PatternFormat(
         	"{0}<br/><br/><span class=\"tablemetadataspan\">{1}</span>" +
         	"<span class=\"searchmetadataspan\">{2}</span>");
-        
+
     formatter2.format( data, [2,4,3], 2 );
-    
+
     var view = new google.visualization.DataView(data);
-	
+
 	view.setColumns([1,2,{calc:generateRightColumn, type:'string', id:'test'} ]);
-	
+
 	//needed to set class on right column so it can be hidden until needed
 	function generateRightColumn(dataTable, rowNum){
 		return "<div id=\"right_"+dataTable.getValue(rowNum, 0)+"\"></div>";
 	}
-	
+
 	var reportTable = new google.visualization.Table($("table_container_content"));
-	
+
 	//~~~~~~~~~~~~~Implement Event Listeners~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	//custom sort event to disable sorting on 3rd column and update the contents of the table
 	google.visualization.events.addListener(reportTable, 'sort',function(event) {
 			var upDownArrow = "&#9650;";
-			
+
 			//global variable incremented to determine if sorting ascending or descending
 			sortCount ++;
 			var ascDesc = (sortCount % 2 ==0)
 			if(ascDesc) upDownArrow = "&#9660;";
-			
+
 			// clear search results if applicable
 			if ( isCreateReportsPage() && isInSearchMode() ) {
-				clearTableSearch();	
+				clearTableSearch();
 			}
-			
+
 			// Sort the table
 			updateHtmlForQuestionsTableSort(reportTable,data,view,event,ascDesc,upDownArrow);
 	});
 	// event which will signal when the table is fully loaded
 	google.visualization.events.addListener(reportTable, 'ready', function(event){
 		isReportTableReady = true;
-		
+
 		// Remove overlay screen when appropriate
 		var maskMsgs = ['Loading questions. Please wait...'];
 		if ( arrayContains( maskMsgs, getOverlayMessage() )) {
 			removeOverlayScreen();
 		}
-		
+
 		// Add the table paginator when appropriate
 		if ( isCreateReportsPage() ) {
 			displayReportTableFirstPage();
 		}
-		
+
 		// Execute the most recently clicked query, if any
 		performActionOnSelectedSavedReport();
 	});
 	//~~~~~~~~~~~~~END Implement Event Listeners~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
+
 	//~~~~~~~~~~~~~Draw the table~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// TODO: Sorting has been disabled for now - figure out a way to correctly handle sorting with pagination.
 	reportTable.draw(view,{sort:"disable",allowHtml:true,showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
@@ -469,100 +460,100 @@ function handleQueryResponse(response) {
 	jQuery(".google-visualization-table-table td:nth-child(3n)").removeClass('answersShow').addClass('answersHide');
 	// hide the spinner
 	hideSpinner('table_container_spinner');
-	
+
 }
 
 
 /**
- * This function handles any functionalities 
+ * This function handles any functionalities
  * not related to Google queries that should be executed when the page loads.
  */
 function executeOnload(){
 	// Set up the variable which will store module metadata information
 	moduleMetadataService.loadModuleMetaData({
-			callback: function( data ){ 
-				
+			callback: function( data ){
+
 				// 1. Populate the main hash for the metadata, appModuleMetadata.
-				
-				if ( data ) appModuleMetadata = eval('(' + data + ')'); 
-				
+
+				if ( data ) appModuleMetadata = eval('(' + data + ')');
+
 				// 2. Add any additional metadata information
 				// that might be embedded within the user documents.
-				
+
 				var query = new google.visualization.Query(baseUrlString + 'caHopeDS?viewName=GetDocMetaData&group=true&orderedColumnNames=Field,Id,Name');
-				
+
 				query.setQuery('select Field, Id, Name');
-				
+
 			    query.send(function(response){
-			    	
+
 			    	 if (response.isError()) return;
-			    	 
+
 			    	 var supplementalData  = response.getDataTable();
-			    	 			    	 			    	 
+
 			    	 for ( var i = 0; i < supplementalData.getNumberOfRows(); ++i ) {
 			    		 var fieldType = supplementalData.getValue(i,0);
-			    		 
+
 			    		 var fieldId   = supplementalData.getValue(i,1);
-			    		 
+
 			    		 var fieldName = supplementalData.getValue(i,2);
-			    		 
+
 			    		 if ( !appModuleMetadata["forms"] ) {
 			    			 appModuleMetadata["forms"] = {};
 			    		 }
-			    		 
+
 			    		 if ( !appModuleMetadata["modules"] ) {
 			    			 appModuleMetadata["modules"] = {};
 			    		 }
-			    		 
+
 			    		 if ( fieldType == "Form" && !appModuleMetadata["forms"][fieldId]) {
 			    			 appModuleMetadata["forms"][fieldId] = { "id" : fieldId, "name" : fieldName };
 			    		 }
-			    		 
+
 			    		 if ( fieldType == "Module" && !appModuleMetadata["modules"][fieldId]) {
 			    			 appModuleMetadata["modules"][fieldId] = { "id" : fieldId, "name" : fieldName };
 			    		 }
 			    	 }
-			    });	
+			    });
 			},
-			errorHandler: function( msg, exception ){ 
-				// 1. Display an alert message				
+			errorHandler: function( msg, exception ){
+				// 1. Display an alert message
 				// jAlert('Sorry, an error occurred while loading metadata - please contact your System Administrator.');
 			}
 	});
-	
+
 	//..............execute other "onload" functions...................
 }
 
 /**
  * This function updates the content of the table when it is sorted
- * 
- * 
+ *
+ *
  * NOTE: Bug fix: Currently, the default Google sort causes the original content of selected/modified rows to be lost.
  * To fix this, we store the original contents of the rows that have been selected so that they can be updated later.
  */
 function updateHtmlForQuestionsTableSort(reportTable,data,view,event,ascDesc,upDownArrow) {
 	// Get all rows which have questions selected
-	var elms = jQuery('input[id^=check_]:checked').parentsUntil('tr').parent();	
-	
+	var elms = jQuery('input[id^=check_]:checked').parentsUntil('tr').parent();
+
 	// For each question, determine the HTML content of the row in the unsorted version of the table
 	// by looking up its row index in the current version of the table
 	// and using it to map to its html content
-	elms.each( function(){ 
+	elms.each( function(){
 		var elm = jQuery(this);
 		var sortedIndex = jQuery('table.google-visualization-table-table tr').index(elm)-1;
 		var unsortedIndex = tableSortedIndexes ? tableSortedIndexes[ sortedIndex ] : sortedIndex;
 		var htmlString = elm.htmlWithFormElementValues();
 		selectedQuestionsInTable[unsortedIndex+''] = htmlString;
 	});
-		
+
 	// reset the order of the rows in the table
 	tableSortedIndexes = data.getSortedRows([{column: view.getTableColumnIndex(event.column), desc: ascDesc}]);
 	view.setRows(tableSortedIndexes);
 	reportTable.draw(view,{
 		sort:"event",allowHtml:true,showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}
 	});
-		
-	
+
+
 	// Now, update the content of the rows that have selected questions
 	// by mapping their current indexes to the "unsorted" index equivalent
 	// and getting the HTML associated with the "unsorted" index (stored in the "selectedQuestionsInTable" object)
@@ -572,20 +563,20 @@ function updateHtmlForQuestionsTableSort(reportTable,data,view,event,ascDesc,upD
 		var sortedIndexRow = jQuery('table.google-visualization-table-table tr:nth-child(' + sortedIndex + ')');
 		sortedIndexRow.html(htmlString);
 	}
-	
+
 	// Make any final updates to restore anything that the table visualization may have lost during the sort:
-	
+
 	// Show or hide the "Answers" column header as appropriate
 	showHideAnswersColumnHeader();
-	
+
 	// Add the up/down arrow
 	jQuery(".google-visualization-table-table .reportsTableHeader td:eq("+event.column+") span").html(upDownArrow);
-	
+
 	// Update the table's styling
 	jQuery(".reportsTableHeader td:last").html("Answers");//.show();
 	jQuery("#table_container_content .google-visualization-table-table td:nth-child(3n)").addClass('answersShow').removeClass('answersHide');
 	//jQuery(".google-visualization-table-table tr .google-visualization-table-td-number").css("display", "table-cell");
-	
+
 }
 // end POPULATE QUESTIONS
 /***********************************************/
@@ -594,7 +585,7 @@ function updateHtmlForQuestionsTableSort(reportTable,data,view,event,ascDesc,upD
 function selectQuestion(qId){
 	// set the "checked" attribute
 	jQuery('#check_'+qId).attr('checked',true);
-	
+
 	// add the associated Answers block
 	addAnswersBlock(qId);
 }
@@ -605,7 +596,7 @@ function selectQuestion(qId){
 function deselectQuestion(qId){
 	// set the "checked" attribute
 	jQuery('#check_'+qId).attr('checked',false);
-	
+
 	// add the associated Answers block
 	addAnswersBlock(qId);
 }
@@ -613,12 +604,12 @@ function deselectQuestion(qId){
 /***********************************************/
 /** Populate Answers
 /***********************************************/
-function addAnswersBlock(qId){  
+function addAnswersBlock(qId){
   // (Enhancement) In some cases, there could be multiple question checkboxes with the same question ID;
   // before proceeding, handle duplicates as appropriate
   if ( hasDuplicateQuestion( qId ) ) {
 	  var duplicatesResolved = resolveDuplicateQuestions( qId );
-	  // If the duplicates could not be resolved, 
+	  // If the duplicates could not be resolved,
 	  // then it means that user action is required to proceed,
 	  // so exit
 	  if ( !duplicatesResolved ) return;
@@ -628,23 +619,23 @@ function addAnswersBlock(qId){
   if ( isQIdSelected ){ // the question checkbox was selected
 	  if ( canMakeQuestionSelection(qId) ) {
 		  // show the spinner
-		  showSpinner( 'spinner_' + qId );	  
-		  	  
+		  showSpinner( 'spinner_' + qId );
+
 		  // show the Independent/Dependent/Filter dropdown
 		  showOrHideById('selectdiv_'+qId,1);
-		  
+
 		  //show 3rd column and filters
 		  jQuery(".reportsTableHeader td:last").html("Answers").show();
 		  jQuery("#right_"+qId).parent().show();
 		  jQuery("#right_"+qId).show();
-		  	  
+
 		  // hide or show all answer checkboxes for this question
 		  // based on the value of the independent/dependent/filter dropdown
 		  showOrHideAnswerCheckboxes(qId);
-		  
+
 		  // handle More/Less Answers' links appropriately
 		  handleMoreAndLessAnswerLinks(qId,'show');
-		
+
 		  // If the answers have already been displayed for this question but they are merely hidden,
 		  // then show the answers;
 	      // else build a CouchDB query for the answers to this question
@@ -654,7 +645,7 @@ function addAnswersBlock(qId){
 		  else {
 			  displayAnswersForQuestion( qId );
 		  }
-		  
+
 		  //style third column
 		  jQuery("#table_container_content .google-visualization-table-table td:nth-child(3n)").addClass('answersShow').removeClass('answersHide');
 		  //jQuery(".google-visualization-table-table tr .google-visualization-table-td-number").css("display", "table-cell");
@@ -666,7 +657,7 @@ function addAnswersBlock(qId){
 
 	// hide the Independent/Dependent/Filter dropdown
 	showOrHideById('selectdiv_'+qId,2);
-		
+
 	//hide 3rd column if all hidden
 	if(jQuery(".shortNameToggle:checked").length==0){
 		//jQuery(".google-visualization-table-table tr .google-visualization-table-td-number").css("display", "none");
@@ -675,17 +666,17 @@ function addAnswersBlock(qId){
 	}
 	// uncheck all answer checkboxes
 	jQuery('#answers_'+qId+' div input[type=checkbox]:checked').attr('checked',false);
-	
+
 	// hide the set of answers
 	showOrHideById('answers_'+qId, 2, 1400);
-	  
-	// update the answers confirmation box    
+
+	// update the answers confirmation box
 	updateConfirmationBox(qId,'check_'+qId);
-	  
+
 	// Reset the IDs of duplicate questions, as appropriate
 	removeTemporarySuffixesFromDuplicateQuestions( qId );
-  }  
-  
+  }
+
 
   // (Bug fix) Ensure that the focus stays around the clicked checkbox;
   // the screen should not scroll to the top of the page unnecessarily.
@@ -721,16 +712,16 @@ function resetScrollPosition(anchor){
 	// If no questions are selected, then set the scrollbar to move to the top of the table of questions
 	var noQuestionsSelected = jQuery('input[id^=check]:checked').length == 0;
 	if ( noQuestionsSelected ) jQuery('#table_container').animate({scrollTop:0},200);
-	
+
 	// Otherwise, set the "hash" property of the location so that the page scrolls to the given anchor
 	else goToQuestionAnchor(anchor);
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //This function resolves the issue of selecting a question
 // with duplicates
-// by preventing the user from being able to select more than one 
+// by preventing the user from being able to select more than one
 // of the duplicate questions at a time.
-// Also, currently the DOM IDs of the duplicate questions are the same, 
+// Also, currently the DOM IDs of the duplicate questions are the same,
 // which poses a problem since the questions are processed by ID.
 // This is resolved by temporarily resetting the IDs of the non-selected
 // duplicates once one is selected,
@@ -739,25 +730,25 @@ function resetScrollPosition(anchor){
 function resolveDuplicateQuestions(qId){
 	// The prefix of the question checkboxes
 	var prefix = 'check_';
-	
+
 	// The ID of the original question checkbox
 	var qIdOriginalCheckboxId = prefix + qId;
-	
+
 	// The value of the original checkbox question
 	var qIdOriginalCheckboxValue = jQuery('[id=' + qIdOriginalCheckboxId + ']:checked').val();
-	
+
 	// Whether it was checked
 	var wasOriginalChecked = !!qIdOriginalCheckboxValue;
-		
+
 	// If there are duplicate question elements with the same ID and value, then
 	// remove those duplicate elements
 	jQuery('[id=' + qIdOriginalCheckboxId + '][value=' + qIdOriginalCheckboxValue + ']').not(':first').parentsUntil('tr').parent().remove();
 	jQuery('[id=' + qIdOriginalCheckboxId + '][value=' + qIdOriginalCheckboxValue + ']:first').attr('checked',wasOriginalChecked);
-		
+
 	// Otherwise, any duplicates will be question elements with the same ID but different values.
 	// Get the number of duplicates that were selected
 	var numSelected = jQuery('[id^=' + qIdOriginalCheckboxId + ']:checked').length;
-	
+
 	// Get the ID of the last selected question:
 	// Since we assume that only one duplicate will be selected at a time,
 	// we can assume that:
@@ -767,17 +758,17 @@ function resolveDuplicateQuestions(qId){
 	var qIdCheckboxId;
 	if ( numSelected > 1 ) qIdCheckboxId = jQuery('[id^=' + qIdOriginalCheckboxId + '][id!=' + qIdOriginalCheckboxId + ']').attr('id');
 	else if ( numSelected == 1) qIdCheckboxId = qIdOriginalCheckboxId;
-	else qIdCheckboxId = 'DUMMYID';	
-		
+	else qIdCheckboxId = 'DUMMYID';
+
 	// Get the value of the selected question
 	var qIdValue = jQuery('[id=' + qIdCheckboxId + ']:checked').val();
-	
+
 	// Determine whether or not this question was checked
-	var wasQuestionChecked = !!qIdValue;	
+	var wasQuestionChecked = !!qIdValue;
 
 	// Get the list of duplicate questions whose IDs need to be reset
 	var duplicatesToReset;
-	
+
 	if ( wasQuestionChecked ){ // means this question was checked
 		duplicatesToReset = jQuery('[id^=' + qIdOriginalCheckboxId + '][value!=' + qIdValue + ']');
 		if ( duplicatesToReset.filter(':checked').length > 0 ) {
@@ -787,10 +778,10 @@ function resolveDuplicateQuestions(qId){
 			alertMsg +=  '<br/><br/><b>' + duplicatesToReset.filter(':checked').val() + '</b><br/>';
 			alertMsg += '<br/>To select this question, you must deselect the duplicate(s) first.';
 			jAlert(alertMsg,'CANNOT SELECT DUPLICATE QUESTION');
-			
+
 			// deselect this question
 			jQuery('[id=' + qIdCheckboxId + ']:checked').attr('checked',false);
-			
+
 			// return false
 			return false;
 		}
@@ -799,13 +790,13 @@ function resolveDuplicateQuestions(qId){
 			// if the question was checked then reset all non-checked duplicates by adding a suffix to the IDs
 			addTemporarySuffixesToDuplicateQuestions( qId, duplicatesToReset );
 		}
-	} 		
+	}
 	// return true
 	return true;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//Function which determines whether or not this question 
+//Function which determines whether or not this question
 // is associated with a set of duplicate questions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function hasDuplicateQuestion( qId ) {
@@ -813,7 +804,7 @@ function hasDuplicateQuestion( qId ) {
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Function for temporarily resetting the IDs 
+// Function for temporarily resetting the IDs
 // of a set of duplicate question elements
 // by adding a suffix to them
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -828,8 +819,8 @@ function addTemporarySuffixesToDuplicateQuestions( qId, duplicates ) {
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Function for removing 
-// temporarily added suffixes 
+// Function for removing
+// temporarily added suffixes
 // from a set of duplicate questions
 // (Meant to be called whenever a duplicate question is deselected)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -850,7 +841,7 @@ function removeTemporarySuffixesFromDuplicateQuestions( qId ) {
 // Functions for showing more/less answers per question
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function handleMoreAndLessAnswerLinks( qId, showOrHideFlag ){
-	if ( showOrHideFlag == 'show' ) {		  
+	if ( showOrHideFlag == 'show' ) {
 		if(jQuery("#more_"+qId).hasClass("wasVisible")){
 			showOrHideById("more_"+qId, 1);
 		}
@@ -880,10 +871,10 @@ function handleMoreAndLessAnswerLinks( qId, showOrHideFlag ){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //END Functions for showing more/less answers per question
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-				  
-function populateAnswersForQuestion(response) {	
+
+function populateAnswersForQuestion(response) {
 	var spinnerId = 'spinner_' + questionId;
-	
+
     if (response.isError()) {
 	  jAlert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
       hideSpinner( spinnerId );
@@ -892,7 +883,7 @@ function populateAnswersForQuestion(response) {
 
     // Get the DataTable associated with the response
     var data  = response.getDataTable();
-        
+
     // Display the answers
     displayAnswersForQuestion( questionId, data );
 }
@@ -909,35 +900,35 @@ function displayAnswersForQuestion( qId, data ) {
 	{
 		showOrHideById(answerSetDivId,1,1400);
 	}
-	
+
 	else
 	{
 		var answersArray = new Array();
-		
+
     	// Apply custom formatting to the Answers column as appropriate
 		formatColumn( data, 3, getQuestionShortName( qId ) );
-	    
+
 	    for ( var i = 0 ; i < data.getNumberOfRows(); ++i ) {
-	    	
+
 	    	var value = data.getFormattedValue( i, 3 ) || data.getValue( i, 3 );
-	    	
+
 	    	if ( answersArray.indexOf( value ) == -1 ) {
 	    		answersArray.push( value );
 	    	}
 	    }
-	
+
 		//if all answers are displayed, hide more answers link
 		if(answersArray.length<globalResultsAtOnce){
-			showOrHideById(moreId, 0); 
+			showOrHideById(moreId, 0);
 			showMoreIsHidden = true; //no other way to later determine if all answers have already been displayed
 		}
-		
+
 		if ( jQuery('#'+currElmId).is(':checked')) {//question checkbox is checked
 			var questionAnswers = this.answers[questionId];
 			var answersDivIsEmpty = jQuery('#'+answerDiv).is(':empty');
 			if ( /*jQuery('#'+ answerSetDivId).val()===undefined*/questionAnswers == undefined || answersDivIsEmpty ) { // means the answers block has not been previously added
 				var currSelection = jQuery('#'+currElmId).val();
-				var htmlString = "<div class=\"questionTypeSelect\" id=\"selectdiv_" + questionId + "\"><div class=\"questionTypeSelectChild1\"><span>Variable Type:<br/></span><select id=\"select_" + questionId + "\" name=\"select_" + questionId + "\" onchange=\"updateConfirmationBox('" + questionId+"','" + currElmId +"')\"><option value=\"independent\">Independent</option><option value=\"dependent\">Dependent</option><option value=\"filter\">Filter</option></select></div>";  
+				var htmlString = "<div class=\"questionTypeSelect\" id=\"selectdiv_" + questionId + "\"><div class=\"questionTypeSelectChild1\"><span>Variable Type:<br/></span><select id=\"select_" + questionId + "\" name=\"select_" + questionId + "\" onchange=\"updateConfirmationBox('" + questionId+"','" + currElmId +"')\"><option value=\"independent\">Independent</option><option value=\"dependent\">Dependent</option><option value=\"filter\">Filter</option></select></div>";
 				htmlString += "<div class=\"questionTypeSelectChild2\"><span>Data Type:<br/></span><select id=\"seldata_" + questionId + "\" name=\"seldata_" + questionId + "\"  onchange=\"updateDataType('" + questionId+"')\"><option value=\"string\">String</option><option value=\"number\">Numeric</option><option value=\"date\">Date</option></select></div>";
 				// Add FormTable-related section, if appropriate
 				htmlString += getFormTableHTMLSection( questionId );
@@ -951,7 +942,7 @@ function displayAnswersForQuestion( qId, data ) {
 				//rightColumnHtml += '<div id="' + plusMinusDivId + '"class="minusicon" onclick="plusMinusClick(this,\'' + answerSetDivId +'\',\''+questionId+ '\')">Hide</div>';
 				rightColumnHtml+='</div>';
 				jQuery('#'+answerDiv).append(htmlString);
-				
+
 				//---------Add answer-----------
 				var el = jQuery(rightColumnHtml);
 				questionAnswers = new com.healthcit.hopeanalytics.Answer(el, answersArray, questionId, globalResultsAtOnce);
@@ -962,14 +953,14 @@ function displayAnswersForQuestion( qId, data ) {
 					el.append('<a href="#more" id="'+moreId+'" class="showMore">+ Show More</a>');
 				}
 				jQuery('#'+rightDiv).append(el);
-				
+
 				//------------------------------
-				
+
 				//jQuery('#'+rightDiv).append(rightColumnHtml);
 			}
 			else if (jQuery('#'+ answerSetDivId).is(':hidden')) { // means the answers block was previous added,but it is just hidden
 				showOrHideById(answerSetDivId,1,1400);
-				
+
 			}
 			else{ //if not hidden, must be adding more answers
 				questionAnswers.addAnswers(answersArray);
@@ -978,13 +969,13 @@ function displayAnswersForQuestion( qId, data ) {
 	}
 	//hide the spinner
 	hideSpinner( spinnerId );
-	    
-    // update the answers confirmation box    
+
+    // update the answers confirmation box
     var ansCheckId = currElmId;
 	updateConfirmationBox(qId,ansCheckId);
 
-	//faux columns	
-	updateAnswerSectionLayout(qId);	
+	//faux columns
+	updateAnswerSectionLayout(qId);
 }
 
 function updateAnswerSectionLayout(qId){
@@ -1042,12 +1033,12 @@ function executeQueryForAnswers(skipValue, qId){
 	var queryString = baseUrlString + 'caHopeDS?viewName=GetAllQuestionsWithAnswers&group=true&orderedColumnNames=QId,QText,AId,AText';
 	queryString += '&startkey=["' + qId + '"]&endkey=["' + qId + ',{}"]';
 	queryString += '&limit='+globalResultsAtOnce+'&skip='+skipValue;
-	
-	var query = new google.visualization.Query(queryString);		
-	query.setQuery('select QId, QText, AId, AText');	
+
+	var query = new google.visualization.Query(queryString);
+	query.setQuery('select QId, QText, AId, AText');
 	questionId = qId; //set global variable to be used in the callback function
 	//globalQueryString = limitedQueryString; //set global variable to be used in the callback function
-	query.send(populateAnswersForQuestion);	
+	query.send(populateAnswersForQuestion);
 }
 
 /*"Show more answers" link event*/
@@ -1055,31 +1046,31 @@ jQuery("a.showMore").live('click', function() {
 	var answerId = jQuery(this).attr('id');
 	//get number of answers already loaded
 	var skipValue = jQuery(this).siblings("fieldset").children("div").length;
-	
+
 	questionId = answerId.substring(5);
-	
+
 	executeQueryForAnswers(skipValue, questionId);
-	
+
 	//add show less link if it hasn't been added
 	if(jQuery("#less_"+questionId).length==0 || jQuery("#less_"+questionId+":hidden").length>0){
 		jQuery(this).after('<a href="#showLess" class="showLessLink" id="less_'+questionId+'">- Show Less</a>').hide().slideDown();
 	}
-	
+
 	return false;
 });
 
 /*"Show less answers" link event*/
 jQuery("a.showLessLink").live('click', function() {
 	var answerId = jQuery(this).attr('id');
-	
+
 	questionId = answerId.substring(5);
 	var ans = answers[questionId];
 	var hasMore = ans.removeAnswers();
 	showOrHideById("more_"+questionId, 1);
-	if(hasMore){	
-		jQuery(this).hide();			
+	if(hasMore){
+		jQuery(this).hide();
 	}
-	
+
 	return false;
 });
 
@@ -1090,64 +1081,64 @@ jQuery("a.showLessLink").live('click', function() {
 /** EXPLANATION OF JOIN CONTEXT:
  *  1) The "join context" refers to a set of fields (Module/Form/FormTableRow/specific Question)
  *   that will be used in a query to join 2 Question fields.
- *  
+ *
  *  2) The "join contexts" that may be defined by a user are:
  *     - "Default" (Owner)
  *     - "Module"
  *     - "Form"
  *     - "Other" (specific Question field selected by the user)
- *  
- *  3) The "join context" applies to 2 Question fields. 
- *  Even though the user defines a "join context" for each question individually, 
- *  the "join context" actually only applies to the question field in the context of another question field. 
+ *
+ *  3) The "join context" applies to 2 Question fields.
+ *  Even though the user defines a "join context" for each question individually,
+ *  the "join context" actually only applies to the question field in the context of another question field.
  *  The actual join context between 2 Question fields is determined as the join context of one of the fields.
- *  Usually, it will be the join context of the second field, 
+ *  Usually, it will be the join context of the second field,
  *  EXCEPT when the first field is an Independent variable, in which case it becomes the join context of the first field.
- *  
- *    
- *  4) "Join Context/Variable" and "Group By Context/Variable" are used interchangeably because 
+ *
+ *
+ *  4) "Join Context/Variable" and "Group By Context/Variable" are used interchangeably because
  *  the join context happens to correspond to the Group By context (how a Question field will be grouped).
  *  The term "Group By" is a more recognized, standard SQL terminology compared to "Join Context".
  *  Because of this, join contexts are presented to the user as "Group By" contexts/variables
- *  rather than "Join" contexts/variables. 
- *  
+ *  rather than "Join" contexts/variables.
+ *
  *  5) The "join key" is the list of fields which are used for joins.
  *     The join key contains the following fields in this order:
- *     
+ *
  *     [
 		  Other-related column (optional - only defined for queries that have an "Other" join context),
 		  FormTableRow (the Collector table row associated with this record, if applicable - could be null),
 		  Owner (default),
-		  ModuleId (optional - only defined for queries with a "Module" or "Form" join context), 
+		  ModuleId (optional - only defined for queries with a "Module" or "Form" join context),
 		  FormId (optional - only defined for queries with a "Form" join context)
 		]
-		
+
 	   Each record in a CouchDB query resultset will include these 5 fields as the first fields in the record, regardless of whether or not they are optional for the query.
 	   When they are optional, they will show up as null in the resultset.
- * 
+ *
  */
 /***********************************************/
 
 // Set up join contexts
 function updateJoinContext( qId ){
-	var joinContextElmId = 'seljoin_' + qId; // join context element ID	
-	var joinContextOtherElmContainerId = 'otherJoinTxt_' + qId; // join context "Other" container ID	
+	var joinContextElmId = 'seljoin_' + qId; // join context element ID
+	var joinContextOtherElmContainerId = 'otherJoinTxt_' + qId; // join context "Other" container ID
 	var joinContext = jQuery('#'+joinContextElmId).val();// selected join context for this question
-		
-	// if this question is being used as a join context variable, then 
+
+	// if this question is being used as a join context variable, then
 	// the join context must be 'module' or 'form'
 	var isJoinVariable;
-	jQuery('[id^=seljoinother_]').each(function(){ 
+	jQuery('[id^=seljoinother_]').each(function(){
 		isJoinVariable = ( this.value == qId && joinContext == 'other');
 		return ! isJoinVariable; // if isJoinVariable is true then this will break out of the loop
 	});
-	
+
 	if ( isJoinVariable && ! arrayContains(['module','form'], joinContext ) ) {
 		jAlert('Only Group By contexts <b>Module</b> and <b>Form</b> are permitted for this question<br/>(it is being used as a Group By variable).');
 		jQuery('#' + joinContextElmId).val('module'); // set the join context to "Module" by default
 	}
-	
-	// else, if this question is an autogenerated field, then 
+
+	// else, if this question is an autogenerated field, then
 	// the join context must be from the predefined set of join contexts for that field
 	else if ( isAutogeneratedField( qId ) ){
 		var requiredJoinContext = autogeneratedQuestionFieldJoinContexts[ getQuestionShortName(qId) ];
@@ -1156,30 +1147,30 @@ function updateJoinContext( qId ){
 			jQuery('#' + joinContextElmId).val(requiredJoinContext); // reset the join context
 		}
 	}
-	
+
 	// else if join context = "other":
-	else if ( joinContext == 'other' ){		
+	else if ( joinContext == 'other' ){
 		//display the Join Context "Other" Variable entry form
 		displayJoinContextForm(qId);
-	}	
+	}
 	// else:
 	else{
 		// show the spinner for this question
 		showSpinner('spinner_'+qId);
-		
+
 		// clear the join context for "Other" for this question
 		clearLocalJoinContextForOther( qId );
-		
+
 		// if joinContext = module
 		if ( joinContext == 'module' ) {
-			finalizeJoinContextSelection(qId,'module');		
+			finalizeJoinContextSelection(qId,'module');
 		}
 
 		// if joinContext = form
 		else if ( joinContext == 'form' ) {
 			finalizeJoinContextSelection(qId,'form');
 		}
-		
+
 		// hide the spinner for this question
 		hideSpinner('spinner_'+qId);
 	}
@@ -1189,19 +1180,19 @@ function updateJoinContext( qId ){
 function clearLocalJoinContextForOther( qId ) {
 	// show the spinner for this question
 	showSpinner('spinner_'+qId);
-	
+
 	simulateBrowserUpdate('seljoinother_'+qId,'');
-	
+
 	// if the selected join context is still "other", then reset the join context
 	if ( jQuery('#seljoin_' + qId).val() == 'other' ) jQuery('#seljoin_' + qId).val('default');
-	
+
 	// if there are no remaining questions which have their join context set to other,
 	// then reset the DOM element which stores the current value of the "other" join context
-	if ( jQuery('[id^=seljoin_] option:selected[value=other]').length == 0 ) 
+	if ( jQuery('[id^=seljoin_] option:selected[value=other]').length == 0 )
 	{
 		jQuery('#tmpJoinContextOther').val('');
 	}
-	
+
 	// hide the spinner for this question
 	hideSpinner('spinner_'+qId);
 }
@@ -1213,7 +1204,7 @@ function refreshJoinContextOtherSection( qId ){
 	var otherJoinSectionElm = jQuery('#otherJoinTxt_' + qId);
 	var otherJoinVar = jQuery('#seljoinother_' + qId).val();
 	var showOrHide = ! isEmptyString( otherJoinVar );
-	
+
 	// refresh the screen appropriately
 	otherJoinSectionElm.toggle( showOrHide );
 	// update the descriptive text for this join context
@@ -1231,7 +1222,7 @@ function setOtherJoinContextDescriptiveText( qId, joinQId, joinContext ) {
 			otherJoinVarText += ',' + joinContextLabel;
 		}
 	}
-	
+
 	// set the descriptive text
 	var otherJoinVarTextElm = jQuery('#seljoinothertxt_' + qId);
 	otherJoinVarTextElm.html( otherJoinVarText );
@@ -1241,21 +1232,21 @@ function setOtherJoinContextDescriptiveText( qId, joinQId, joinContext ) {
 // to confirm whether or not they are valid
 function validateAllJoinContexts(){
 	var errorMsgStr = '';
-	
+
 	// 1. Validate each join variable selection independently
-	getAllJoinContextSelections().each( function(){	
+	getAllJoinContextSelections().each( function(){
 		var qId = this.id.replace('seljoin_','');
 		var qShortName = getQuestionShortName( qId );
 		var otherJoinQId = jQuery('#seljoinother_'+qId).val();
 		var err = validateJoinContext(qId,otherJoinQId);
-		if ( ! isEmptyString( err ) ) errorMsgStr += '-<b>' + qShortName + '</b>: ' + err;	
+		if ( ! isEmptyString( err ) ) errorMsgStr += '-<b>' + qShortName + '</b>: ' + err;
 		else {
 			if ( ! isEmptyString( otherJoinQId ) && ! arrayContains( otherContextJoinVariables, otherJoinQId )) {
 				otherContextJoinVariables.push( otherJoinQId );
 			}
 		}
-	});	
-	
+	});
+
 	// 2. Validate that there is no more than one join variable
 	// (For now only 1 is permitted)
 	if ( otherContextJoinVariables.length > 1 ) {
@@ -1263,12 +1254,12 @@ function validateAllJoinContexts(){
 	}
 
 	// 3. Validate that the join variable has been included as an independent/filter variable
-	if ( otherContextJoinVariables.length > 0 && 
-		(!arrayContains( ['independent','filter'],getQuestionSelectedVariableType( otherContextJoinVariables[ 0 ] ) ) || 
+	if ( otherContextJoinVariables.length > 0 &&
+		(!arrayContains( ['independent','filter'],getQuestionSelectedVariableType( otherContextJoinVariables[ 0 ] ) ) ||
 		 !isQuestionSelected( otherContextJoinVariables[ 0 ] ))){
 		errorMsgStr += "-The Group By variable <b>" + getQuestionShortName(otherContextJoinVariables[ 0 ]) + "</b> should be included as one of the query variables, or it should no longer be made a Group By variable.<br/>";
 	}
-	
+
 	return errorMsgStr;
 }
 
@@ -1282,42 +1273,42 @@ function getAllJoinContextSelections(){
 function validateJoinContext(qId,otherJoinQId){
 	var errorMsgStr = '';
 	var joinContext = jQuery('#seljoin_'+qId).val();
-	
-	if ( isQuestionSelected( qId )) {	
+
+	if ( isQuestionSelected( qId )) {
 		// 1. Validate that the field selected as the join variable
 		// is not the same as the current question
 		if ( qId == otherJoinQId ) {
 			errorMsgStr += '-A question cannot select itself as the Group By variable.<br/>';
 		}
-		
+
 		// 2. Validate that when "Other" has been selected as the join context,
 		// the "Other" value field is not blank
 		if ( joinContext == 'other' && isEmptyString( otherJoinQId ) ) {
 			errorMsgStr += '-When the Group By context is <b>Other</b>, a question must be selected as the Group By variable.<br/>';
 		}
-		
+
 		// 3. Validate that when "Other" has not been selected as the join context,
 		// the "Other" value field is blank
 		if ( joinContext != 'other' && ! isEmptyString( otherJoinQId ) ) {
 			errorMsgStr += '-A question may only be selected as a Group By variable when the Group By context is <b>Other</b>.<br/>';
 		}
-		
+
 		// 4. Validate that the selected join variable is not a dependent variable
 		if ( getQuestionSelectedVariableType( otherJoinQId ) == 'dependent' ) {
 			errorMsgStr += '-Dependent variables may not be selected as Group By variables.<br/>';
 		}
-		
+
 		// 5. Validate that the selected join variable is not an autogenerated field
 		if ( isAutogeneratedField( otherJoinQId ) ){
 			errorMsgStr += '-Autogenerated fields may not be selected as Group By variables.<br/>';
 		}
-		
+
 		// 6. Validate that when "Module" has been selected as the join context,
 		// the "Module" autogenerated field has been selected
 		if ( joinContext == 'module' && !isQuestionSelected( getQuestionIdForShortName('Module'))){
 			errorMsgStr += '-The field <b>Module</b> should be selected when the Group By context is "Module".<br/>';
 		}
-		
+
 		// 7. Validate that when "Form" has been selected as the join context,
 		// the "Form" autogenerated field has been selected
 		if ( joinContext == 'form' && !isQuestionSelected( getQuestionIdForShortName('Form'))){
@@ -1335,7 +1326,7 @@ function setUpJoinContextForm(qId){
 	var joinQId = jQuery('#tmpJoinContextOther').val(); // join variable's question ID
 	var joinQShortName = getQuestionShortName(joinQId) ; // join variable's short name
 	if ( ! joinQShortName ) joinQShortName = '';
-	
+
 	// Construct the Join Context Form
 	if ( jQuery("#joinContextForm").length == 0 ) {
 		var htmlStr = "<form id=\"joinContextForm\" style=\"display:none;\">";
@@ -1361,8 +1352,8 @@ function setUpJoinContextForm(qId){
 		jQuery("#table_container").append(htmlStr);
 		joinContextAutoCompleter('setup');
 	}
-	
-	// Update the values in the Join Context form 
+
+	// Update the values in the Join Context form
 	// for the current question
 	jQuery("#joinContextCurrentQuestion").val(qId);
 	jQuery("#joinContextForm #textFld1").html(qShortName);
@@ -1378,23 +1369,23 @@ function setUpJoinContextForm(qId){
 		jQuery('#joinContextForm div.subsection2').hide();
 		jQuery('#joinContextForm span.selected').text('');
 	}
-	
+
 	// Create and display the dialog box within which the Join Context form will be displayed
 	jQuery('#joinContextForm').dialog({
 		width: 500,height:350,title:"Select Group By Variable",modal:true,autoOpen:false,buttons:{
 		"Make Selection" : function(){
 			// show the spinner
 			showSpinner('join_context_spinner');
-		
-			// update the join context's "Other" value to 
+
+			// update the join context's "Other" value to
      		// the value of the "tmpJoinContextOther" field
 			var joinQId = jQuery('#tmpJoinContextOther').val();
 			if ( ! joinQId  ) joinQId = '';
 			finalizeJoinContextSelectionForOther( qId, joinQId );
-			
+
 			// hide the spinner
 			hideSpinner('join_context_spinner');
-		
+
 			// clear out all form fields and close the dialog box
 			jQuery("#otherJoinContextValueFld").val('');
 			jQuery('#joinContextForm').dialog('close');
@@ -1413,7 +1404,7 @@ function setUpJoinContextForm(qId){
 				});
 			}
 		},
-		"Cancel" : function(){			
+		"Cancel" : function(){
 			// clear out all form fields and close the dialog box
 			jQuery("#otherJoinContextValueFld").val('');
 			// reset the join context for the question if applicable
@@ -1437,7 +1428,7 @@ function populateSearchFieldWithToken(){
 	joinContextAutoCompleter('search',searchToken );
 }
 
-// Function which handles showing/hiding 
+// Function which handles showing/hiding
 // the section of the Join Context form that displays the join variable's join context
 function refreshJoinContextForm(text,showOrHideFlag){
 	if ( showOrHideFlag == 'show' ) {
@@ -1454,22 +1445,22 @@ function refreshJoinContextForm(text,showOrHideFlag){
 function joinContextAutoCompleter(flag,searchToken){
 	var input = jQuery("#otherJoinContextValueFld");
 	var currentQId = jQuery('#joinContextCurrentQuestion').val();
-	if ( flag == 'search' ) { 
+	if ( flag == 'search' ) {
 		if ( input.autocomplete( 'widget' ).is( ':visible' ) ) {
 			input.autocomplete( 'close' );
 			return;
 		}
-		
+
 		if ( searchToken ) input.autocomplete( 'search', searchToken );
 		else input.autocomplete( 'search' );
-		
+
 		input.focus();
-	} 
+	}
 	else if ( flag == 'setup' ){ // initializes autocomplete
 		input.autocomplete( { source: getFullListOfQuestions(), minLength: 0 });
-		
+
 		input.bind('autocompleteselect', function( event, ui ){
-			var joinQId = ui.item ? ui.item.questionId : '';	
+			var joinQId = ui.item ? ui.item.questionId : '';
 			var joinQText = ui.item ? ui.item.label : '';
 			var currentQId = jQuery('#joinContextCurrentQuestion').val();
 
@@ -1480,7 +1471,7 @@ function joinContextAutoCompleter(flag,searchToken){
 			// return (if the return value is false then any selection will be de-selected)
 			return returnVal;
 		});
-		
+
 		input.bind('autocompleteclose', function( event, ui ){
 			// If nothing was selected from the autocomplete dropdown, then clear the bottom section of the form
 			var selectionElm = jQuery("#joinContextForm #textFld2");
@@ -1500,7 +1491,7 @@ function updateJoinContextForOther( qId, joinQId ){
 	if ( isEmptyString( joinQId ) ) {
 		return false;
 	}
-	
+
 	// else if the join variable is invalid then prompt the user as appropriate
 	var errorMsg = validateJoinContext( qId, joinQId );
 	if( ! isEmptyString( errorMsg ) ){
@@ -1509,11 +1500,11 @@ function updateJoinContextForOther( qId, joinQId ){
 		jQuery("#otherJoinContextValueFld").val('');
 		return false;
 	}
-	
-	// else proceed	
+
+	// else proceed
 	var existingJoinVars= jQuery('input[id^=seljoinother_][value!=\'\'][value!=\'' + joinQId + '\']');
-	
-	// Prevent the user from adding more than one join variable to the query		
+
+	// Prevent the user from adding more than one join variable to the query
 	if ( existingJoinVars.length > 0 ) {
 		var existingJoinVarQId =  existingJoinVars[ 0 ].value;
 		var existingJoinVarShortName = getQuestionShortName( existingJoinVarQId );
@@ -1534,7 +1525,7 @@ function updateJoinContextForOther( qId, joinQId ){
 	} else{
 		prefinalizeJoinContextSelectionForOther(qId,joinQId);
 	}
-	
+
 	// return true; this means that the selected variable's value was saved
 	// and could be used as the new join variable
 	return true;
@@ -1548,7 +1539,7 @@ function prefinalizeJoinContextSelectionForOther(qId,joinQId){
 		jQuery("#joinContextForm")
 			.append("<input type=\"hidden\" id=\"tmpJoinContextOther\" value=\"\">");
 	}
-	
+
 	jQuery('#tmpJoinContextOther').val(joinQId);
 }
 
@@ -1560,12 +1551,12 @@ function finalizeJoinContextSelection(qId,joinContext){
 		if ( !isQuestionSelected(moduleOrFormQId) ){
 			// update the question checkbox
 			simulateBrowserUpdate('check_'+moduleOrFormQId,true);
-			
+
 			//update the question's variable type
 			simulateBrowserUpdate('select_'+moduleOrFormQId,'filter');
-			
+
 			//update the join context
-			simulateBrowserUpdate('seljoin_'+moduleOrFormQId, joinContext, true );			
+			simulateBrowserUpdate('seljoin_'+moduleOrFormQId, joinContext, true );
 		}
 		// If this is a join variable then make appropriate updates
 		// to all the questions that use this join variable
@@ -1586,7 +1577,7 @@ function finalizeJoinContextSelection(qId,joinContext){
 function finalizeJoinContextSelectionForOther(qId,joinQId){
 	// Update the "Other" join context field for this question
 	simulateBrowserUpdate( 'seljoinother_'+qId, joinQId );
-	
+
 	// if joinQId is not blank, then update the remaining "Other" join context fields
 	if ( !isEmptyString( joinQId ) ) {
 		// if the join variable has not yet been added to the query,
@@ -1595,16 +1586,16 @@ function finalizeJoinContextSelectionForOther(qId,joinQId){
 		if ( ! joinVariableType || !isQuestionSelected( joinQId )) {
 			// update the question checkbox
 			simulateBrowserUpdate('check_'+joinQId,true);
-			
+
 			//update the question's variable type
 			simulateBrowserUpdate('select_'+joinQId,'filter');
 		}
-		
+
 		//update the join variable's join context
 		var joinQContext = jQuery('[name=otherJoinContextJoinFld]:checked').val();
 		if ( isEmptyString( joinQContext ) ) joinQContext = 'module';
-		simulateBrowserUpdate('seljoin_'+joinQId, joinQContext );	
-				
+		simulateBrowserUpdate('seljoin_'+joinQId, joinQContext );
+
 		// update the remaining "Other" join context fields
 		jQuery('input[type=text][id^=seljoinother_][id!=seljoinother_' + qId + ']').each( function(){
 			if ( jQuery('#'+this.id.replace('other_','_')).val() == 'other'){
@@ -1620,7 +1611,7 @@ function updateJoinContextAsOther( qId, joinQId ) {
 		setUpJoinContextForm(qId);
 		prefinalizeJoinContextSelectionForOther( qId, joinQId );
 		finalizeJoinContextSelectionForOther( qId, joinQId );
-	}	
+	}
 }
 
 // END setting up JOIN CONTEXTS
@@ -1641,7 +1632,7 @@ function getJoinKeyForOtherRelatedJoinVariable(){
 	var joinContext = getQuestionSelectedJoinContext(other); // the "Other" variable's join context
 	var tableContext = hasTableContext(other); // whether the "Other" is associated with a Form Table
 	return getJoinKey( joinContext, null, tableContext );
-	
+
 }
 
 // returns the join key for the given question
@@ -1652,25 +1643,25 @@ function getJoinKeyForQuestion(qId){
 	return getJoinKey( joinContext, otherJoinContext, tableContext );
 }
 // returns the join key for the given join context variables.
-// The structure will look like this: 
+// The structure will look like this:
 //   [
 //       Other-related column  (optional - only exists for queries that have an "Other" join context),
 //       FormTableRow (optional),
 //       Owner,
-//       ModuleId (optional), 
+//       ModuleId (optional),
 //       FormId (optional)
 //   ]
 function getJoinKey( joinContext, otherJoinContext, includeTableContext ) {
 	var joinKeyArray = new Array(); // the question's join key
-	
+
 	// First, add column for the "Other"-related join context, if applicable
 	if ( otherJoinContext ){
 		var columnName = getJoinColumnName( otherJoinContext );
 		joinKeyArray.push( columnName );
 	}
-	
-	// Next, add columns for the non-"Other"-related join context 
-	for ( var i = 0; i < joinContextArray.length; ++i ){ 
+
+	// Next, add columns for the non-"Other"-related join context
+	for ( var i = 0; i < joinContextArray.length; ++i ){
 		var currentJoinContext = joinContextArray[ i ];
 		var columnName = getColumnNameForContext( currentJoinContext );
 		if ( i == 0 ) {
@@ -1686,7 +1677,7 @@ function getJoinKey( joinContext, otherJoinContext, includeTableContext ) {
 			joinKeyArray.push( columnName );
 		}
 	}
-	
+
 	// return the join key
 	return joinKeyArray;
 }
@@ -1695,14 +1686,14 @@ function getJoinKey( joinContext, otherJoinContext, includeTableContext ) {
 function getColumnNameForContext( contextVar ) {
 	var columnName;
 	var oHsh = joinContextFieldMap;
-	
+
 	if ( oHsh[ contextVar ] ) {
 		columnName = oHsh[ contextVar ];
 	}
-	else { // means the join context must be "Other"		
+	else { // means the join context must be "Other"
 		columnName = getFormattedColumnNameForShortName( contextVar + '1' );
 	}
-	
+
 	return columnName;
 }
 
@@ -1710,40 +1701,40 @@ function getColumnNameForContext( contextVar ) {
 function getJoinContextForColumn( columnName ) {
 	var joinContext;
 	var oHsh = joinContextFieldMap;
-	
+
 	for ( var ctx in joinContextFieldMap ) {
 		if ( joinContextFieldMap[ ctx ] == columnName ){
 			return ctx;
 		}
 	}
-	
+
 	return 'other';
 }
 
 // When executing a join between 2 question fields, this function determines which of the 2 fields should be used to determine the join context
 function findJoinContextSource( qId1, qId2 ){
 	if ( !qId1 ) return qId2;
-	
+
 	var qId1TableContext = hasTableContext( qId1 );
 	var qId2TableContext = hasTableContext( qId2 );
-	
+
 	// Handle when both questions have the same table context
 	if ( qId1TableContext == qId2TableContext ) {
 		return qId2;
 	}
-	
+
 	// Else:
 	// 1) If either of the questions is a dependent variable, return the question field that DOES have table context.
 	// 2) Otherwise, return the question field that does NOT have table context.
-	// 
+	//
 	// EXPLANATION OF LOGIC:
 	//
 	// When the question with table context is used in this case, it automatically means that the join will return no records (empty resultset).
-	// This is because the join key fields will include the FormTableRow field, 
+	// This is because the join key fields will include the FormTableRow field,
 	// which will always be null for the question without table context,
 	// and non-null for the question with table context.
 	// Hence, joining on this field will never produce a match.
-	// 
+	//
 	// For the independent and filter variables, we DO want to be able to join non-table questions with table questions without producing an empty resultset.
 	// Hence, we use the question field that does NOT have table context.
 	//
@@ -1761,11 +1752,11 @@ function findJoinContextSource( qId1, qId2 ){
 // gets the most restrictive join context for the current query,
 // NOTE: this excludes any "Other"-related join context
 function getMostRestrictiveJoinContextForCurrentQuery(){
-	var currentQueryJoinContexts = 
+	var currentQueryJoinContexts =
 		getAllSelectedQuestions().map( function(qId) {
 			return getQuestionSelectedJoinContext( qId );
 		});
-	 
+
 	return findMostRestrictiveJoinContext( currentQueryJoinContexts );
 }
 
@@ -1812,7 +1803,7 @@ function buildGoogleJoinKey( joinKey ){
 	if ( allJoinColumns.length == 0 ) allJoinColumns = getAllJoinColumns();
 	for ( var i = 0; i < joinKey.length; ++i ){
 		var joinColumn = joinKey[ i ];
-		var index = jQuery.inArray( joinColumn, allJoinColumns ); 
+		var index = jQuery.inArray( joinColumn, allJoinColumns );
 		googleJoinKey.push( [index,index] );
 	}
 	return googleJoinKey;
@@ -1820,20 +1811,20 @@ function buildGoogleJoinKey( joinKey ){
 
 // returns the full set of join columns for the current query
 // (will eventually be removed from the dataset in order to render the visualizations correctly)
-//The structure will look like this: 
+//The structure will look like this:
 //[
 //  Other-related column (optional - only exists for queries that have an "Other" join context),
 //  FormTableRow,
 //  Owner,
-//  ModuleId, 
+//  ModuleId,
 //  FormId
 //]
 function getAllJoinColumns(){
 	var joinContext = getMostRestrictiveJoinContext();
-	var otherJoinContextVar = (hasOtherJoinContextSelected() ? 
+	var otherJoinContextVar = (hasOtherJoinContextSelected() ?
 			               getOtherRelatedJoinVariable() :
 			               null);
-	
+
 	return getJoinKey( joinContext, otherJoinContextVar, true );
 }
 
@@ -1878,33 +1869,33 @@ function updateConfirmationBox(qId,ansCheckId){
 	var indDepBoxId = variableType+'QtnSet';
 	var helpContainerContentId = 'help_container_content';
 	var autogenerated = isAutogeneratedField( qId );
-	
+
 	// if this is a saved report, then show the report title
 	updateSavedReportTitleSection(helpContainerContentId);
-	
+
 	// hide or show all answer checkboxes for this question
 	// based on the value of the independent/dependent/filter dropdown
 	showOrHideAnswerCheckboxes(qId);
-	
+
 	if ( jQuery('#' + ansCheckId).is(':checked') ) { // It means a question/answer checkbox has been selected
-		
+
 		// Hide "NONE" in the appropriate Independent/Dependent/Filter box
 		jQuery( '#' + indDepBoxId + ' li.none').hide();
-		
+
 		// Remove the selection's aggregation box if it exists
 		removeAggregationBox( qId );
-		
+
 		// Remove the selection's text from the confirmation section if it exists
 		jQuery( '.' + quesIndDepBoxTextClass ).remove();
-		
+
 		// Add the text to the appropriate Independent/Dependent/Filter box in the confirmation section
 		var quesIndDepBoxText = "<li class=\"" + quesIndDepBoxTextClass + "\"><a href=\"#\" onclick=\"goToQuestionAnchor('" + quesAnchorId + "')\">" + jQuery('#' + quesCheckId).val() + "</a>" + "<ul class=\"answers\"></ul></li>";
 		if ( autogenerated ) jQuery( '#' + indDepBoxId ).append( quesIndDepBoxText );
 		else jQuery( '#' + indDepBoxId ).prepend( quesIndDepBoxText );
-		
+
 		// Add a blinking effect to the newly added text
 		doBlink('.'+quesIndDepBoxTextClass);
-		
+
 		// Add all selected answers (if any) to the appropriate box
 		// IF this is a dependent variable
 		if ( variableType == 'dependent'){
@@ -1912,7 +1903,7 @@ function updateConfirmationBox(qId,ansCheckId){
 				jQuery( '.' + quesIndDepBoxTextClass + ' ul.answers').append("<li>" + jQuery(this).val() + "</li>");
 			});
 		}
-		
+
 		// Add an Aggregation Type section to the appropriate box
 		// IF this is a dependent variable
 		//TODO: Allow aggregations for independent/filter variables as well
@@ -1932,94 +1923,94 @@ function updateConfirmationBox(qId,ansCheckId){
 			jQuery("." + quesIndDepBoxTextClass + " li:contains('" + answerValue +"')").remove();
 		}
 	}
-	
+
 	// Show "NONE" in the appropriate Independent/Dependent/Filter box
 	// if all the questions/answers were deselected for this box
-	if ( jQuery('#independentQtnSet li[class!=none]').length==0 ) 
+	if ( jQuery('#independentQtnSet li[class!=none]').length==0 )
 		jQuery( '#independentQtnSet li.none').show();
-	if ( jQuery('#dependentQtnSet li[class!=none]').length==0 ) 
+	if ( jQuery('#dependentQtnSet li[class!=none]').length==0 )
 		jQuery( '#dependentQtnSet li.none').show();
-	if ( jQuery('#filterQtnSet li[class!=none]').length==0 ) 
+	if ( jQuery('#filterQtnSet li[class!=none]').length==0 )
 		jQuery( '#filterQtnSet li.none').show();
 }
 
 // Updates the data type associated with a question
 function updateDataType(qId,selectedDataType){
 	var htmlStr = '';
-	
+
 	// Reset the data type if applicable
 	if ( selectedDataType ) {
 		jQuery('#seldata_' + qId).val(selectedDataType);
 	}
-	
+
 	// Determine whether or not to display a warning
-	if (!selectedDataType) selectedDataType = getQuestionSelectedDataType(qId);	
+	if (!selectedDataType) selectedDataType = getQuestionSelectedDataType(qId);
 	var total = getTotalNumForQuestionAndDataType( qId, 'string' );
 	var selectedTotal = getTotalNumForQuestionAndDataType( qId, selectedDataType );
 	if ( !isNaN( total ) && total > 0 ) {
-		// if none of the data fits the selected data type, 
+		// if none of the data fits the selected data type,
 		// then alert the user and reset the selected data type
 		if ( selectedTotal == 0 || isNaN( selectedTotal ) ) {
 			htmlStr = "No " + selectedDataType + "s were found for \"" + getQuestionShortName(qId) + "\".";
 			jAlert(htmlStr);
 			setQuestionSelectedDataType(qId,'string');
 		}
-		// else, if only some of the data does not fit the selected data type, then 
+		// else, if only some of the data does not fit the selected data type, then
 		// alert the user and reset the selected data type
 		else if ( !isNaN( selectedTotal) && selectedTotal < total ) {
 			var truncatedPercentage = Math.round(((total-selectedTotal)/total) * 100);
 			if ( truncatedPercentage == 0 ) truncatedPercentage = ((total-selectedTotal)/total) * 100;
-			htmlStr  = "<b>WARNING</b>: By selecting \"" + selectedDataType + "\", " + 
-			truncatedPercentage + 
+			htmlStr  = "<b>WARNING</b>: By selecting \"" + selectedDataType + "\", " +
+			truncatedPercentage +
 			"% of the data will not be displayed.";
 			jAlert(htmlStr);
-			setQuestionSelectedDataType(qId,'string');			
+			setQuestionSelectedDataType(qId,'string');
 		}
 	}
-	
+
 	// for dependent variables, reset the aggregation box section
 	var isDependentQuestion = jQuery('#select_' + qId).val() == "dependent";
 	if ( isDependentQuestion ) {
-		removeAggregationBox( qId );	
+		removeAggregationBox( qId );
 		addAggregationBox( qId );
 	}
-	
+
 	// add display options to the question as appropriate
 	addQuestionDisplayOptions( qId );
-	
+
 }
 
 //Function which determines the total number of records for this question and datatype
 function getTotalNumForQuestionAndDataType( qId, dataType ) {
-	var total; 
-	
+	var total;
+
 	var nonTableTotalSelected = questionDataTypes[ qId + PIPES + dataType ];
 	var tableTotalSelected = questionDataTypes[ qId + PIPES + dataType + 'table' ];
-	
+
 	if ( !nonTableTotalSelected ) nonTableTotalSelected = 0;
 	if ( !tableTotalSelected ) tableTotalSelected = 0;
-	
+
 	if ( !hasTableContext( qId ) ) // no table context
-	{ 
-		total = nonTableTotalSelected;
-	}	
-	else 
 	{
-		var tableContextType =  getFormTableContextTypeForQuestion( qId );	
-		
+		total = nonTableTotalSelected;
+	}
+	else
+	{
+		var tableContextType =  getFormTableContextTypeForQuestion( qId );
+
 		if ( tableContextType == getTableDataOnlyContextType() ) { // only table data
 			total = parseInt(tableTotalSelected);
 		}
-		
+
 		else if ( tableContextType == getTableAndNonTableContextType() ) { //both table and non-table data
 			total = parseInt(nonTableTotalSelected) + parseInt(tableTotalSelected);
 		}
-		
+
 		else { // only non-table data
 			total = parseInt(nonTableTotalSelected);
 		}
 	}
-	
+
 	return total;
 }
 
@@ -2029,14 +2020,14 @@ function addQuestionDisplayOptions( qId )
 	var selectDivElmId = 'selectdiv_' + qId;
 	var dateQuestionTypeElmId = 'dateQuestionType_' + qId;
 	var dateShowElmId = "dateSelDataShow_" + qId;
-	var dateFormatElmId = "dateSelDataFormat_" + qId;	
+	var dateFormatElmId = "dateSelDataFormat_" + qId;
 	var dateFormatSpanElmId = "dateSelDataFormatSpan_" + qId;
-	
+
 	var selectedDataType = getQuestionSelectedDataType(qId);
-	
+
 	// refresh the question type display options
 	jQuery("#" + dateQuestionTypeElmId ).remove();
-	
+
 	if ( selectedDataType == 'date' ){ // Date
 		var selectDivElm = jQuery( '#' + selectDivElmId );
 		var htmlStr = "<fieldset id=\"" + dateQuestionTypeElmId + "\" class=\"questionTypeDisplay\">";
@@ -2061,10 +2052,10 @@ function addQuestionDisplayOptions( qId )
 // updates the date format options based on the selected date transformation type
 function updateDateFormatOptions(qId) {
 	var dateShowElmId = "dateSelDataShow_" + qId;
-	var dateFormatElmId = "dateSelDataFormat_" + qId;	
+	var dateFormatElmId = "dateSelDataFormat_" + qId;
 	var dateFormatSpanElmId = "dateSelDataFormatSpan_" + qId;
 	var transformationType = jQuery("#"+dateShowElmId).val();
-	
+
 	var mappings = { 1: [0,1,2,3,4,5,6], 2 : [2,4] };
 	if ( mappings[ transformationType.toString() ]) {
 		var opts = mappings[ transformationType.toString() ];
@@ -2097,7 +2088,7 @@ function goToQuestionAnchor(anchor){
 			jQuery('a[name='+anchor+']').parentsUntil('tr').parent().show();
 		}
 	}
-	
+
 	window.location.hash = '#' + anchor;
 	removeOverlayScreen();
 }
@@ -2118,7 +2109,7 @@ function loadjscssfile(filename, filetype){
 	 if (typeof fileref!="undefined"){
 	  document.getElementsByTagName("head")[0].appendChild(fileref)
 	}
-}	
+}
 
 function getNumDependentVariableQuestions(){
 	return jQuery('#dependentQtnSet li[class^=inddeptxt_]').length;
@@ -2152,7 +2143,7 @@ function getNumColumnsForDependentQuestion( qId ) {
 
 function plusMinusClick(elem, answerSetDivId, qId){
 	expandCollapse(elem, answerSetDivId);
-	
+
 	if(elem.className=='minusicon'){
 		if(jQuery("#more_"+qId).length>0 && jQuery("#more_"+qId).hasClass("wasVisible")){
 			showOrHideById("more_"+qId, 1);
@@ -2169,7 +2160,7 @@ function plusMinusClick(elem, answerSetDivId, qId){
 		}
 		if(jQuery("#less_"+qId).is(":visible")){
 			jQuery("#less_"+qId).addClass("wasVisible");
-		}	
+		}
 		if(jQuery("#more_"+qId).length>0){
 			showOrHideById("more_"+qId, 0);
 		}
@@ -2226,17 +2217,17 @@ function resetJoinContexts(){
 	joinContextElms.each( function(){
 		// reset the join context to "default"
 		jQuery(this).val('default');
-		
+
 		// get the question ID associated with this element
 		var prefix = 'seljoin_';
 		var qId = jQuery(this).attr('id').substring( prefix.length );
-				
+
 		// reset the "Other-" related join variable fields
 		jQuery("#otherJoinContextValueFld").val('');
-		
+
 		// reset the join context for the question
 		clearLocalJoinContextForOther(qId);
-		
+
 	});
 }
 /**
@@ -2244,7 +2235,7 @@ function resetJoinContexts(){
  */
 function canMakeQuestionSelection(qId) {
 	var canSelect = true;
-		
+
 	// Run the table context related validations
 	var errorMsg = validateTableContexts( qId );
 	//If running the validations resulted in the question's checkbox being deselected, then
@@ -2253,7 +2244,7 @@ function canMakeQuestionSelection(qId) {
 		jAlert( errorMsg );
 		canSelect = false;
 	}
-	
+
 	return canSelect;
 }
 
@@ -2263,18 +2254,18 @@ function canMakeQuestionSelection(qId) {
 function validateQueryCriteria() {
 	// First reset the global variables
 	resetGlobalVariables();
-	
+
 	var valid = true;
-	
+
 	var errorMessageString = 'The following issues were found:<br/>';
-	
+
 	// Next set up the base variable(s) (the associated question Id(s))
 	var baseVarJQueryObj = jQuery('#independentQtnSet li[class^=inddeptxt_],#filterQtnSet li[class^=inddeptxt_]');
 	baseVarJQueryObj.each(function() {
 		var index = this.getAttribute('class').lastIndexOf('_')+1;
 		baseVarArray.push(this.getAttribute('class').substring(index));
 	});
-	
+
 	// Set up the dependent variables
 	var elmId = null;
 	var dependentVarJQueryObj = jQuery('#dependentQtnSet li[class^=inddeptxt_]');
@@ -2297,20 +2288,20 @@ function validateQueryCriteria() {
 		}
 		else dependentVarArray.push([dependentQuestionId,dependentAnswerId]);
 	});
-		
+
 	//1. Validate whether an independent variable has been provided
 	if ( baseVarJQueryObj.length == 0 ){
 		errorMessageString += '-Please select an independent variable.<br/>';
 		valid = false;
 	}
-	
+
 	//2. Validate the join context selections
 	var joinContextErrors = validateAllJoinContexts();
 	if ( ! isEmptyString( joinContextErrors ) ) {
 		errorMessageString += joinContextErrors;
 		valid = false;
 	}
-	
+
 	// 3. Validate that no autogenerated fields were selected as dependent variables
 	for ( var i = 0; i < dependentVarArray.length; ++i ){
 		if ( isAutogeneratedField( dependentVarArray[i][0] ) ){
@@ -2322,23 +2313,23 @@ function validateQueryCriteria() {
 			valid = false;
 		}
 	}
-	
+
 	// 4. Validate the table context selections
 	var tableContextErrors = validateTableContexts();
 	if ( ! isEmptyString( tableContextErrors ) ) {
 		errorMessageString += tableContextErrors;
 		valid = false;
 	}
-	
-	
-	// Display the validation error messages in an alert for the user	
+
+
+	// Display the validation error messages in an alert for the user
 	if ( !valid ) {
 		jAlert( errorMessageString );
 	}
-	
+
 	// Remove the overlay screen (if any) if the query is invalid
 	if ( !valid ) removeOverlayScreen();
-	
+
 	return valid;
 }
 
@@ -2350,24 +2341,24 @@ function clearReportsSection(){
 	jConfirm(confirmMsg,"Confirmation",function(r){
 		if ( r ) {
 			var tableContainerDivId = 'table_container';
-			
+
 			overlayScreen('Clearing selections...');
 			simulatedSleep(1000);
-			
+
 			// reset global variables
 			resetGlobalVariables();
-			
+
 			// reset join contexts
 			resetJoinContexts();
-			
+
 			// reset saved report template info, if applicable
 			resetCurrentSavedReport();
-			
+
 			// reset search results, if applicable
 			clearTableSearch();
-			
+
 			if ( !isCreateReportsPage() ) navigateToCreateReports();
-				
+
 			jQuery('input[id^=check_]:checked').each(function(){
 				jQuery(this).attr('checked',false);
 				invokeAttachedDOMEvent(jQuery(this),function(){removeOverlayScreen();});
@@ -2382,16 +2373,16 @@ function clearReportsSection(){
 function resetApp(){
 	// reset global variables
 	resetGlobalVariables();
-	
+
 	// reset join contexts
 	resetJoinContexts();
-	
+
 	// reset saved report template info, if applicable
 	resetCurrentSavedReport();
-	
+
 	// reset search results, if applicable
 	clearTableSearch();
-	
+
 	// deselected all selected questions
 	jQuery('input[id^=check_]:checked').each(function(){
 		jQuery(this).attr('checked',false);
@@ -2438,7 +2429,7 @@ function getReportsForOtherJoinContextVariables(response){
 	    }
 		otherContextJoinVarResultSetArray.push( response.getDataTable() );
 	}
-	
+
 	if ( otherContextJoinVarResultSetArray.length < 1 ) { // currently does not allow more than 1 "Other"-related join variable
 		// process the "Other"-related join variable
 		var otherJoinVar = getOtherRelatedJoinVariable();
@@ -2448,34 +2439,34 @@ function getReportsForOtherJoinContextVariables(response){
 		// if the base variable(s) are dates then indicate this in the request parameters
 		otherJoinVarQueryString += hasDateDataType(otherJoinVar) ? '&dateDataType='+otherJoinVarColumnName : '';
 		var otherJoinVarQuery = new google.visualization.Query(otherJoinVarQueryString);
-		var querySelectStatement = 
+		var querySelectStatement =
 			'select ' + otherJoinVarColumnName + ',FormTableRow,Owner,ModuleId,FormId' +
 			getGoogleWhereClause( otherJoinVar );
 		otherJoinVarQuery.setQuery(querySelectStatement);
-		otherJoinVarQuery.send(getReportsForOtherJoinContextVariables);	
+		otherJoinVarQuery.send(getReportsForOtherJoinContextVariables);
 	}
-	
+
 	else {
 		// derive a version of "otherContextJoinVarResultSet" without duplicates
 		var googleJoinKey = buildGoogleJoinKey(getJoinKeyForOtherRelatedJoinVariable());
-		var keys = new Array();		
+		var keys = new Array();
 		for ( var i = 0; i < googleJoinKey.length; ++i ) keys.push( googleJoinKey[i][0] );
-		otherContextJoinVarResultSet = removeDuplicatesFromDataTable( otherContextJoinVarResultSetArray[ 0 ], keys );		
-		
+		otherContextJoinVarResultSet = removeDuplicatesFromDataTable( otherContextJoinVarResultSetArray[ 0 ], keys );
+
 		//The following commented-out code may be useful to view the baseVarResultSet during debugging:
 //		var reportTable = new google.visualization.Table($("reports_div_1"));
 //		reportTable.draw(otherContextJoinVarResultSet,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 //		hideSpinner('reports_container_spinner');
 //		$('reports_div_1').show();
-		
+
 		// generate the Query object for the base variables
 		getReportsForBaseVariables();
-	}	
+	}
 }
 
 /**
  * Generates resultset for the independent/filter variables ("baseVarResultSet").
- * 
+ *
  * NOTE: ENHANCEMENT FOR FORMTABLES (1/19/2012)
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Since we allow a mix of table and non-table independent/filter variables,
@@ -2483,30 +2474,30 @@ function getReportsForOtherJoinContextVariables(response){
  * Yet we still need to include "FormTableRow" as one of the first columns in the resultset.
  * However, limitations in the Google API will not allow you to have any columns before the join key columns in the resultset.
  * Hence, this method includes some FormTable-related manipulations that were made to workaround this.
- * 
- */		  
+ *
+ */
 function getReportsForBaseVariables(response) {
 	if ( response ) { // the response object is the actual response object returned by a Query
 	    if (response.isError()) {
 		  jAlert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		  return;
-	    }	    
+	    }
 	    baseVarResultSetArray.push( response.getDataTable() );
 	}
-	
+
 	if ( baseVarResultSetArray.length != baseVarArray.length ) {
 		// This means that the base variables have not been completely processed,
 		// so proceed to process the next batch of base variables
-		var currBaseVar = baseVarArray[ baseVarResultSetArray.length ];	
+		var currBaseVar = baseVarArray[ baseVarResultSetArray.length ];
 		baseVarColumnNames.push( getFormattedColumnName( currBaseVar ) );
-		
+
 		// If the current variable is an autogenerated field, then skip to the next variable since query results will not be needed for autogenerated fields
 		// (this should provide a slight performance boost)
 		if ( isAutogeneratedField( currBaseVar ) ) {
 			baseVarResultSetArray.push( null );
 			getReportsForBaseVariables();
 		}
-		
+
 		// else, proceed to run the query
 		else {
 			var baseVarColumnName = baseVarColumnNames[ baseVarColumnNames.length - 1 ];
@@ -2519,14 +2510,14 @@ function getReportsForBaseVariables(response) {
 			baseVarQueryString += hasDateDataType(currBaseVar) ? '&dateDataType='+baseVarColumnName : '';
 			var baseVarQuery = new google.visualization.Query(baseVarQueryString);
 			var hasOnlyBaseVariables = ( baseVarArray.length > 0 && dependentVarArray.length == 0 );
-			var querySelectStatement = 
+			var querySelectStatement =
 				'select ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') + 'FormTableRow,Owner,ModuleId,FormId,' + baseVarColumnName +
 				getGoogleWhereClause( currBaseVar );
 			baseVarQuery.setQuery(querySelectStatement);
 			baseVarQuery.send(getReportsForBaseVariables);
 		}
 	}
-	
+
 	else {
 	    // This means that all the base variables have been processed,
 		// so generate the baseVarResultSet entity by
@@ -2562,8 +2553,8 @@ function getReportsForBaseVariables(response) {
 				else {
 					// Add any missing columns
 					addMissingColumnsForJoin( oldBaseVarSetIndices, newBaseVarSetIndices, oldQId, newQId, googleJoinKey );
-					
-					baseVarResultSet  = 
+
+					baseVarResultSet  =
 						cacure.join(
 								preprocessDataTable( baseVarResultSet, joinContextSource ),
 								preprocessDataTable( baseVarResultSetArray[ index ], joinContextSource ),
@@ -2573,45 +2564,45 @@ function getReportsForBaseVariables(response) {
 								newBaseVarSetIndices);
 				}
 		    }
-		}		
-			    
+		}
+
 	    // next, proceed to generate the final resultset to be displayed
-		
+
 		//The following commented-out code may be useful to view the baseVarResultSet during debugging:
 //		var reportTable = new google.visualization.Table($("reports_div_1"));
 //		reportTable.draw(baseVarResultSet,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 //		hideSpinner('reports_container_spinner');
 //		$('reports_div_1').show();
-		
-	    if ( dependentVarArray.length == 0 ) { // no dependent variables exist        
+
+	    if ( dependentVarArray.length == 0 ) { // no dependent variables exist
 	        generateCombinedResultSet(1);
 	    }
 	    else {
 	    	// Else, generate the dependent variable resultset
-	    	getReportsForDependentVariables();  	
+	    	getReportsForDependentVariables();
 	    }
-	}	
+	}
 }
 /**
  * Generates resultset for the dependent variables ("dependentVarResultSet").
- * 
+ *
  * NOTE: ENHANCEMENT FOR FORMTABLES (1/19/2012)
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Unlike when executing the join for "baseVarResultSet" and "joinedResultSet" datatables,
  * we do not perform any FormTable-related processing for dependent variables
  * since we are not allowing a mix of table and non-table dependent variables
  * (it is all-or-none: either all of them will be table-related, or none of them will be table-related).
- * 
- */		
+ *
+ */
 function getReportsForDependentVariables(response) {
 	if ( response ) { // the response object is the actual response object returned by a Query
 	    if (response.isError()) {
 		  jAlert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 		  return;
-	    }	    
+	    }
 	    dependentVarResultSetArray.push( response.getDataTable() );
 	}
-	
+
 	if ( dependentVarResultSetArray.length != getNumDependentVariableQuestions() ) {
 		// This means that the dependent variables have not been completely processed,
 		// so proceed to process the next batch of dependent variables
@@ -2633,20 +2624,20 @@ function getReportsForDependentVariables(response) {
 		if( hasNumericDataType(qId) )
 		{
 			selectString = 'select ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') +
-                'FormTableRow,Owner,ModuleId,FormId,' + getSelectedAggregation(qId) + '(' + dependentVarColumnName + ')' + 
+                'FormTableRow,Owner,ModuleId,FormId,' + getSelectedAggregation(qId) + '(' + dependentVarColumnName + ')' +
                 getGoogleWhereClause( qId ) + ' group by ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') + 'FormTableRow,Owner,ModuleId,FormId' ;
 		}
-        
+
 		else
 		{
-			selectString = 'select ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') + 
+			selectString = 'select ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') +
 			'FormTableRow,Owner,ModuleId,FormId,count(QId)' +
 			getGoogleWhereClause( qId ) + ' group by ' + (otherJoinColumnName ? otherJoinColumnName+',' : '') + 'FormTableRow,Owner,ModuleId,FormId pivot '+ dependentVarColumnName;
 		}
 		dependentVarQuery.setQuery( selectString );
 		dependentVarQuery.send(getReportsForDependentVariables);
 	}
-	
+
 	else {
 	    // This means that all the dependent variables have been processed,
 		// so generate the dependentVarResultSet entity by
@@ -2669,26 +2660,26 @@ function getReportsForDependentVariables(response) {
 				dependentVarResultSet = dependentVarResultSetArray[ index ];
 			}
 			else {
-				dependentVarResultSet  = 
+				dependentVarResultSet  =
 					cacure.join(
 							dependentVarResultSet,
 							dependentVarResultSetArray[ index ],
 							'full',
 							buildGoogleJoinKey( joinKey ),
 							oldDependentVarSetIndices,
-							newDependentVarSetIndices );				
+							newDependentVarSetIndices );
 			}
-		} 
-		
+		}
+
 		generateCombinedResultSet(1);
-		
+
 	    //The following commented-out code may be useful to view the dependentVarResultSet during debugging:
 //		var reportTable = new google.visualization.Table($("reports_div_1"));
 //		reportTable.draw(dependentVarResultSet,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 //		hideSpinner('reports_container_spinner');
 //		$('reports_div_1').show();
-    
-	}  
+
+	}
 }
 
 // Exports data in downloadable image format
@@ -2700,18 +2691,18 @@ function generateChartAsImage(reportType){
 function generateExcel(){
 	var tableElm = jQuery('.google-visualization-table-table')[0];
 	if ( tableElm ) {
-		var tableText = "<table>" + tableElm.innerHTML + "</table>"; 
+		var tableText = "<table>" + tableElm.innerHTML + "</table>";
 		jQuery.download(baseUrlString  + 'ExcelExportServlet',{htmlTable:encodeURIComponent(tableText)});
 	}
 }
 
 /**
  * Generates the final resultsets and prepares other app components needed to draw the visualizations.
- * It generates the results of joining the datatable for the independent/filter variables 
+ * It generates the results of joining the datatable for the independent/filter variables
  * with the datatable for dependent variables ("joinedResultSet"),
  * from grouping "joinedResultSet" by the appropriate independent/filter variables ("groupedResultSet"),
  * and from setting up the "groupedResultSet" so it could be properly displayed for the visualizations.
- * 
+ *
  * NOTE: ENHANCEMENT FOR FORMTABLES (1/19/2012)
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Since we allow a mix of table and non-table independent/filter variables/dependent variables,
@@ -2719,26 +2710,26 @@ function generateExcel(){
  * Yet we still need to include "FormTableRow" as one of the first columns in the resultset.
  * However, limitations in the Google API will not allow you to have any columns before the join key columns in the resultset.
  * Hence, this method includes some FormTable-related manipulations that were made to workaround this.
- * 
- */	
-function generateCombinedResultSet(reportType){	 
+ *
+ */
+function generateCombinedResultSet(reportType){
 	// remove any overlay
 	removeOverlayScreen();
-	
+
 	// update the value of the current report type
 	currentReportType = reportType;
 	// update menu tabs as appropriate
-	setAsCurrentMenuTab('reportType_' + reportType);	
+	setAsCurrentMenuTab('reportType_' + reportType);
 	var hasDependentVariables = ( dependentVarResultSet != null );
 	var hasMultipleBaseVariables = ( baseVarArray.length > 1 );
-	
+
 	var firstIndependentVar = baseVarArray[ 0 ];
     var firstDependentVar   = getNumDependentVariableQuestions() > 0 ? dependentVarArray[ 0 ][ 0 ] : null;
     var joinContextSource   = findJoinContextSource( firstDependentVar, firstIndependentVar );
-	var joinKey = getJoinKeyForQuestion( joinContextSource ); 
+	var joinKey = getJoinKeyForQuestion( joinContextSource );
 	var googleJoinKey = buildGoogleJoinKey( joinKey );
 	if ( allJoinColumns.length == 0 ) allJoinColumns = getAllJoinColumns();
-	
+
 	// initialize the groupedResultSet if it's null
 	if ( groupedResultSet == null ){
 		if ( hasDependentVariables ) {
@@ -2754,7 +2745,7 @@ function generateCombinedResultSet(reportType){
 					}
 				}
 			}
-			
+
 			// construct an array containing the column indices from baseVarSet
 			// to include in the resultSet representing the join
 			var baseVarReportColumns = new Array();
@@ -2764,7 +2755,7 @@ function generateCombinedResultSet(reportType){
 			}
 //			// Add any missing columns
 			addMissingColumnsForJoin( baseVarReportColumns, dependentVarReportColumns, firstIndependentVar, firstDependentVar, googleJoinKey );
-			
+
 			// Perform a join between the base variable resultset and
 			// the dependent variable result set
 			joinedResultSet = cacure.join(
@@ -2774,21 +2765,21 @@ function generateCombinedResultSet(reportType){
 					googleJoinKey,
 					baseVarReportColumns,
 					dependentVarReportColumns);
-			
+
 		}
 		else { // no dependent variables exist; so no join needs to be performed
 			joinedResultSet = baseVarResultSet;
 		}
-		
+
 		// Next, update the autogenerated columns as appropriate
 		synchronizeAutogeneratedColumns(joinedResultSet);
-		
+
 		//The following commented-out code may be useful to view the resultSet during debugging:
 //		var reportTable = new google.visualization.Table($("reports_div_1"));
 //		reportTable.draw(joinedResultSet,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 //		hideSpinner('reports_container_spinner');
 //		$('reports_div_1').show();
-			
+
 		// Next, perform a GROUP BY on the data
 		var aggregationColumns = new Array();
 		// if there are no dependent variables, then we add a new column to the dataset that will represent the aggregation column
@@ -2804,16 +2795,16 @@ function generateCombinedResultSet(reportType){
 			{
 				// EXPLANATION of nextDependentQuestionIndex:
 				// i corresponds to
-				// the number of base variables, 
+				// the number of base variables,
 				// + the loop's current index in the list of dependent variables.
-				// The current index of dependent variables, in turn, 
+				// The current index of dependent variables, in turn,
 				// corresponds to the number of columns for each dependent question Id
-				// (since each dependent question can have multiple columns represented - 
+				// (since each dependent question can have multiple columns represented -
 				// every possible answer has its own column for non-numeric questions.)
 				// Hence, if we have not yet finished iterating through
 				// all the columns for a dependent question, there is no need to move on to the next
 				// dependent question.
-				// Else, we increment currDependentQIndex because we are now ready to 
+				// Else, we increment currDependentQIndex because we are now ready to
 				// start processing columns for the next dependent question.
 				// (NOTE: Here we add allJoinColumns.length to nextDependentQuestionIndex because additional columns - Owner,ModuleId,FormId... - exist in the dataset.)
 				if ( hasDependentVariables ) {
@@ -2824,66 +2815,66 @@ function generateCombinedResultSet(reportType){
 					}
 					aggregationColumns.push({'column': i, 'aggregation': getAggregationMethodObject( dependentVarArray[ currDependentQIndex ][0] ), 'type': 'number', label: joinedResultSet.getColumnLabel( i )});
 				}
-				
-				else {			
+
+				else {
 					aggregationColumns.push({'column': 0, 'aggregation': cacure.countNonNull, 'type': 'number', label: 'Count'});
 				}
 			}
 		}
-		
+
 		groupedResultSet = google.visualization.data.group(
 			joinedResultSet,
 			keyColumns,
 			aggregationColumns
 		);
-		
+
 		//The following commented-out code may be useful to view the baseVarResultSet during debugging:
 //		var reportTable = new google.visualization.Table($("reports_div_1"));
 //		reportTable.draw(groupedResultSet,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 //		hideSpinner('reports_container_spinner');
 //		$('reports_div_1').show();
 	}
-	
+
 	// Next, add custom formatting to the columns in "groupedResultSet" as appropriate
 	formatReportDataWithCustomFormatting( groupedResultSet );
-			
+
 	// Next, set up the visualizations which will display the results of the GROUP BY operation
 	if ( !reportVisualizations )
 	{
 		reportVisualizations = getVisualizationHash();
-				
+
 		// The charts should use a derived DataView of groupedResultSet, when appropriate.
-		// Override the "draw" method of the chart visualizations 
+		// Override the "draw" method of the chart visualizations
 		// so that they always use the derived DataView as the dataset when appropriate;
 		// also, they should alert the user if the dataset does not fit the visualization.
 		overrideDrawMethod();
 	}
-	
+
 	// set up the current visualization's configuration options
 	setUpReportOptions(null,reportType);
-	
+
 	// hide the spinner
 	hideSpinner('reports_container_spinner');
-	
+
 	// Next, determine whether or not the query returned any results, as
 	// an empty resultset will cause the filter control to break:
-	
-	
-	// If there are no rows in groupedResultSet, then 
+
+
+	// If there are no rows in groupedResultSet, then
 	// indicate that there is no data in the resultset
 	var noDataFound = ( groupedResultSet.getNumberOfRows() == 0 );
-	if ( noDataFound ) 
+	if ( noDataFound )
 	{
 		var msg ='<b>No data was found.</b><br/><br/>'
 			msg+='<b>EXPLANATION:</b><br/><ul><li>There might not be any data available for the independent variable(s) you selected.</li>';
-		    msg+=getMostRestrictiveJoinContextForCurrentQuery() == 'default' ? 
-		    	 '</li></ul>' : 
+		    msg+=getMostRestrictiveJoinContextForCurrentQuery() == 'default' ?
+		    	 '</li></ul>' :
 		    	 '<li>The <b>Group By</b> selections might be too restrictive. Try making them less restrictive, for example: change <b><i>Module</i></b> selections to <b><i>Default</i></b>, or <b><i>Form</i></b> selections to <b><i>Module</i></b> or <b><i>Default</i></b>. </li></ul>';
 		jAlert(msg,"NO DATA");
-		
+
 		// clear any existing overlay
 		removeOverlayScreen();
-		
+
 		//return
 		return;
 	}
@@ -2891,9 +2882,9 @@ function generateCombinedResultSet(reportType){
 	{
 		// set up controls to display in addition to the report/chart
 		setUpControls( reportType, groupedResultSet, reportConfigOptions );
-	
+
 		// open up a dialog box for ImageCharts
-		if ( isImageChartType( reportType ) ) {	
+		if ( isImageChartType( reportType ) ) {
 			showDialogBox( 'reportimages_div_' + reportType );
 		}
 	}
@@ -2937,7 +2928,7 @@ function setUpPrimaryVisualizations(){
 
 //returns a hash of SECONDARY visualizations
 // NOTE: Overridden in proprietary code.
-function setUpSecondaryVisualizations(){	
+function setUpSecondaryVisualizations(){
 	return {};
 }
 
@@ -2979,16 +2970,16 @@ function setUpReportOptions( opts, reportType ){
 			};
 			if(parseInt(reportType) != 5){
 				reportConfigOptions.height = reportType ? getCurrentChartHeight(reportType) : 440;
-			}	
+			}
 }
 
 // Utililty Methods for setting up report controls
 function setUpControls( reportType, resultSet, opts ) {
 	// Set up filter control
 	setUpFilterControl( reportType, resultSet, opts );
-			
+
 	// Set up report controls, as applicable
-	setUpReportControls( reportType );	
+	setUpReportControls( reportType );
 }
 
 function setUpFilterControl( reportType, resultSet, opts ) {
@@ -2996,7 +2987,7 @@ function setUpFilterControl( reportType, resultSet, opts ) {
 	if ( ! isImageChartType( reportType ) ) {
 		jQuery("div[id^=reports_div_]").hide();
 		jQuery("#reports_div_"+reportType).show();
-	}	
+	}
 
 	//set up the visualizations array parameter
 	var arr = new Array();
@@ -3007,9 +2998,9 @@ function setUpFilterControl( reportType, resultSet, opts ) {
 		{
 			currOpts[ key ] = opts[ key ];
 		}
-		arr.push( { visualization: reportVisualizations[prop], options: currOpts } );			
-	}	
-	
+		arr.push( { visualization: reportVisualizations[prop], options: currOpts } );
+	}
+
 	// If the current data set can NOT be filtered, then draw the visualizations without using the filter
 	if ( ! canBeFiltered( resultSet ))
 	{
@@ -3018,14 +3009,14 @@ function setUpFilterControl( reportType, resultSet, opts ) {
 			var oVisualization = arr[index]['visualization'];
 			oVisualization.draw( resultSet, arr[index]['options'] );
 		}
-	}	
+	}
 	// else, handle the filtering
 	else
 	{
 		if ( ! filterControl ) {
 			$("filter_container").empty();
 			filterControl = new org.systemsbiology.visualization.FilterDataTableControl($("filter_container"));
-			
+
 			//set up the visualizations array parameter
 			var arr = new Array();
 			for ( var prop in reportVisualizations )
@@ -3035,12 +3026,12 @@ function setUpFilterControl( reportType, resultSet, opts ) {
 				{
 					currOpts[ key ] = opts[ key ];
 				}
-				arr.push( { visualization: reportVisualizations[prop], options: currOpts } );			
-			}	
+				arr.push( { visualization: reportVisualizations[prop], options: currOpts } );
+			}
 			filterControl.controlled = new Array();
-			
+
 			// draw the filter control and its associated visualizations
-			filterControl.draw( resultSet, 
+			filterControl.draw( resultSet,
 				           { controlledVisualizations: arr,
 			              // hideFilterContainerOnOpen : true,
 				  columnIndexesToFilter : getFilterableColumns(resultSet),
@@ -3052,7 +3043,7 @@ function setUpFilterControl( reportType, resultSet, opts ) {
 }
 
 // Returns an array of columns that can be included in the filter control:
-// 1. Currently, columns that do not have more than 1 unique value will cause the 
+// 1. Currently, columns that do not have more than 1 unique value will cause the
 // filter control to break, so those columns must be removed from the set
 // of filterable columns.
 function getFilterableColumns( data ) {
@@ -3069,26 +3060,26 @@ function getFilterableColumns( data ) {
 function setUpReportControls( reportType ){
 	if ( ! isImageChartType( reportType ) ) {
 		jQuery("#report_controls").empty();
-		
+
 	    jQuery("#report_controls").addClass('report_controls');
-	    
+
 	    // Add the "Save Query" link which will be used to save search queries as templates
 		jQuery('#report_controls').prepend("<span><a href=\"#reportresults\" class=\"saveQueryLink\" onclick=\"saveReportQuery()\">Save Query...</a></span>");
-	    
+
 		// Add the "Filter" link which will be used to filter reports
 		jQuery('#report_controls').prepend("<span><a href=\"#reportresults\" class=\"showFilterLink\" onclick=\"showFilterControlDialog()\">Filter...</a></span>");
-		  
+
 		// Set up Report option controls:
 		// Add a "Chart Type" dropdown for Bar charts
 		if ( reportType == 1 ) {
 			jQuery('#report_controls').prepend("<span id=\"reportOptionalControls\">Bar Display: <select onchange=\"redraw(" + reportType + ",{isStacked:this.value})\"><option value=\"stacked\">Stacked</option><option value=\"grouped\">Grouped</option></select></span>");
 		}
-		
+
 	    // Set up Export Links:
 		// Add an "Export As Image" link for non-Tabular charts
 		if ( reportType != 5 && reportType != 10 ) {
 			jQuery('#report_controls').prepend("<span><a href=\"#reportresults\" onclick=\"generateChartAsImage("+reportType+")\">Export...</a></span>");
-		}	
+		}
 		// Add an "Export as Excel" link for Tabular reports
 		if ( reportType == 5 || reportType == 10 ) {
 			jQuery('#report_controls').prepend("<span><a href=\"#reportresults\" onclick=\"generateExcel()\">Export...</a></span>");
@@ -3139,17 +3130,17 @@ function hasDateDataType( qId ) {
 function overrideDrawMethod(){
 	for ( var type in reportVisualizations ) {
 		var visualization = reportVisualizations[ type ];
-		if ( ! visualization['draw_old'] ) {			
+		if ( ! visualization['draw_old'] ) {
 			visualization['draw_old'] = visualization['draw'];
 			visualization['report_type'] = type;
 			visualization['draw'] = function(){
 
 				// Remove any overlay
 				removeOverlayScreen();
-				
+
 				// Reset the flag indicating whether a saved report was loaded
 				wasSavedReportLoaded = false;
-				
+
 				if ( currentReportType == this.report_type ){ // only draw the visualizations if it was selected
 					var base_dt = resetColumnsForDisplay(this.report_type,arguments[0]);
 					var dt = resetColumnsForVisualization(this.report_type,arguments[0],base_dt);
@@ -3197,16 +3188,16 @@ function overrideDrawMethod(){
 
 // preprocesses the DataTable returned in the response to a query
 function preprocessDataTable( dataTable, qId ) {
-	if ( getQuestionSelectedJoinContext( qId ) == 'other' ) {		
+	if ( getQuestionSelectedJoinContext( qId ) == 'other' ) {
 		var joinKey = getJoinKeyBetweenOtherRelatedJoinVariableAndQuestion( qId );
 		var googleJoinKey = buildGoogleJoinKey( joinKey );
-		
+
 		// determine the first non-key column in the resultset
 		var firstNonKeyColumnInDataTable = googleJoinKey[ googleJoinKey.length - 1 ][0] + 1;
-					
-		// determine the array of columns that will come AFTER the key columns in the resultset			
+
+		// determine the array of columns that will come AFTER the key columns in the resultset
 		var dataTableIndexes = fillArrayWithRange( firstNonKeyColumnInDataTable, dataTable.getNumberOfColumns()-1 );
-							
+
 		// perform the join
 		var dt = cacure.join(
 					otherContextJoinVarResultSet,
@@ -3230,7 +3221,7 @@ function preprocessDataTable( dataTable, qId ) {
 			}
 		}
 	}
-	
+
 	return dataTable;
 }
 
@@ -3238,7 +3229,7 @@ function preprocessDataTable( dataTable, qId ) {
 function resetColumnsForDisplay(reportType,data){
 	var arr = new Array();
 	var arr2 = new Array();
-	var hasDependentVariables = ( dependentVarResultSet != null );	
+	var hasDependentVariables = ( dependentVarResultSet != null );
 	var hasFilterVariables = ( getNumFilterVariableQuestions() > 0 );
 	var hasDependentOrFilterVariables = ( hasDependentVariables || hasFilterVariables );
 	var oReportType = parseInt( reportType );
@@ -3247,8 +3238,8 @@ function resetColumnsForDisplay(reportType,data){
 	var view;
 	var numColumnsForDependentQId=0;
 	var currDependentQIndex = -1;
-	
-	//1. First, if no actual data transformations are required, and 
+
+	//1. First, if no actual data transformations are required, and
 	// if oReportType = 5 (table)
 	// or there are no dependent variables,
 	// then the dataset should remain unchanged.
@@ -3256,9 +3247,9 @@ function resetColumnsForDisplay(reportType,data){
 		( oReportType == 5 || ! hasDependentOrFilterVariables )) {
 		return data;
 	}
-	
+
 	// Else,
-	
+
 	//2. Next, the dataset should be the result of grouping by the independent variable(s) only.
 	// Hence, all filter variables should be removed from the dataset
 	// EXCEPT if the current visualization is a table.
@@ -3267,11 +3258,11 @@ function resetColumnsForDisplay(reportType,data){
 	var groupingArr = fillArrayWithRange(0,lastGroupingIndex);
 	var newGroupedView = google.visualization.data.group( data, groupingArr, arr	);
 	view = newGroupedView;
-	
-	//3. Next, transform the data if applicable	
+
+	//3. Next, transform the data if applicable
 	if ( hasAnyColumnDataTransformations ) {
 		var qId=null;
-		for ( var i = 0; i < view.getNumberOfColumns(); ++i ){ 
+		for ( var i = 0; i < view.getNumberOfColumns(); ++i ){
 			if ( i <= lastGroupingIndex ){
 				qId = baseVarArray[ i ];
 			}
@@ -3283,11 +3274,11 @@ function resetColumnsForDisplay(reportType,data){
 				}
 				qId = dependentVarArray[currDependentQIndex][0];
 			}
-			
+
 			// get the transformed column object that should be associated with this question
 			arr2.push(getTransformedColumnObject(qId,view,i));
 		}
-		// generate a new view with the newly transformed data		
+		// generate a new view with the newly transformed data
 		var newDateView = new google.visualization.DataView(view);
 		newDateView.setColumns(arr2);
 		var lastGroupingIndex = ( isTableType(oReportType) ? baseVarArray.length-1 : getNumIndependentVariableQuestions()-1 );
@@ -3298,7 +3289,7 @@ function resetColumnsForDisplay(reportType,data){
 		reportTable.draw(view,{showRowNumber:false,cssClassNames:{hoverTableRow:'noBackground',selectedTableRow:'noBackground',headerRow:'reportsTableHeader', headerCell:'reportsTableHeaderCell'}});
 		hideSpinner('reports_container_spinner');
 	    $('reports_div_1').show();*/
-		
+
 		// reformat the data appropriately
 		view = formatDataTableOrView(newGroupedView,arr2);
 	}
@@ -3307,11 +3298,11 @@ function resetColumnsForDisplay(reportType,data){
 
 // Determine if any of the columns in the current resultset should undergo any data transformation.
 function areColumnDataTransformationsRequired(reportType,data){
-	// Date columns should be transformed to contain only date parts that are consistent with the selected date format 
+	// Date columns should be transformed to contain only date parts that are consistent with the selected date format
 	if (hasAnySelectedDataType('date')) return true;
-	
+
 	// ............any other conditions.............
-	
+
 	// Else, return false
 	return false;
 }
@@ -3320,9 +3311,9 @@ function areColumnDataTransformationsRequired(reportType,data){
 function areColumnCustomDataFormattingsRequiredForQuery(){
 	// 1. Custom formatting is required if any of the selected fields are autogenerated fields
 	if (hasAnySelectedAutogeneratedFields()) return true;
-	
+
 	// 2. ........any other conditions............
-	
+
 	// Else, return false
 	return false;
 }
@@ -3342,28 +3333,28 @@ function formatDataTableOrView(dataView,reformatColumns,useCustomFormat){
 // Formats the data table/view with standard Google Data Formatters
 function formatReportDataWithNonCustomFormatting( dataView,reformatColumns ){
 	var dataTable = isFunctionInObject(dataView,'toDataTable') ? dataView.toDataTable() : dataView;
-	
+
 	for ( var i=0; i < reformatColumns.length; ++i ){
 		var formatToUse = reformatColumns[i]['format'];
-		if ( formatToUse ){			
+		if ( formatToUse ){
 			var visualizationFormatter;
 			if ( reformatColumns[i]['type'] == 'date' ){
 				visualizationFormatter = new google.visualization.DateFormat({pattern:formatToUse});
 				visualizationFormatter.format(dataTable,i);
-			}					
+			}
 		}
-	}	
-	return new google.visualization.DataView(dataTable); 
+	}
+	return new google.visualization.DataView(dataTable);
 }
 
 // Formats the data table/view with custom Data Formatters (data formatters that do not come from the standard Google APIs)
-function formatReportDataWithCustomFormatting(dataTable){	
+function formatReportDataWithCustomFormatting(dataTable){
 	for ( var colIndex = 0; colIndex < dataTable.getNumberOfColumns(); ++colIndex ) {
 		var shortName = dataTable.getColumnLabel( colIndex );
-		
+
 		formatColumn( dataTable, colIndex, shortName );
 	}
-	
+
 	//return the dataTable
 	return dataTable;
 }
@@ -3374,19 +3365,19 @@ function formatReportDataWithCustomFormatting(dataTable){
 
 
 function formatColumn( dataTable, colIndex, associatedQuestionShortName ) {
-	
+
 	// 1. Format autogenerated fields
 	if( isAutogeneratedShortName( associatedQuestionShortName ) ) {
 		formatAutogeneratedColumn( dataTable, colIndex, associatedQuestionShortName );
-	} 
+	}
 }
 
-// Apply appropriate formatting to the specified autogenerated field 
+// Apply appropriate formatting to the specified autogenerated field
 function formatAutogeneratedColumn( dataTable, colIndex, autoGenField ) {
 	var autoGenFieldMetaData = getAutogeneratedFieldMetaData( autoGenField );
 	if ( autoGenFieldMetaData ) {
 		for ( var rowIndex = 0; rowIndex < dataTable.getNumberOfRows(); ++rowIndex ){
-			var value = dataTable.getValue( rowIndex, colIndex );	
+			var value = dataTable.getValue( rowIndex, colIndex );
 			var valueMetaData = autoGenFieldMetaData[ value ];
 			if ( valueMetaData ) dataTable.setFormattedValue( rowIndex, colIndex, valueMetaData[ 'name' ] );
 		}
@@ -3395,16 +3386,16 @@ function formatAutogeneratedColumn( dataTable, colIndex, autoGenField ) {
 
 // Get the module metadata associated with this autogenerated field
 function getAutogeneratedFieldMetaData( autoGenField ) {
-	var hsh = { 'Form': 'forms', 'Module': 'modules' };	
+	var hsh = { 'Form': 'forms', 'Module': 'modules' };
 	var autoGenFieldMetaData = null;
-	
+
 	if ( hsh[ autoGenField ] ) {
 		// If the module metadata exists in a separate, self-contained document on the server,
-		// then get the metadata from the appModuleMetadata hash 
+		// then get the metadata from the appModuleMetadata hash
 		// which was previously used to store the data from that document
 		autoGenFieldMetaData = appModuleMetadata[ hsh[ autoGenField ] ] ;
 	}
-	
+
 	return autoGenFieldMetaData;
 }
 
@@ -3412,36 +3403,36 @@ function getAutogeneratedFieldMetaData( autoGenField ) {
 // End CUSTOM DATA FORMATS
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// Returns an array of Google Visualization column object for the non-grouping variables 
+// Returns an array of Google Visualization column object for the non-grouping variables
 // (i.e. variables that are NOT independent variables)
 function getNonGroupingColumnObjects(data,firstIndex){
 	var numColumnsForDependentQId=0;
 	var currDependentQIndex = -1;
 	var hasDependentVariables = ( dependentVarResultSet != null );
 	var arr = new Array();
-	
+
 	for ( var i = firstIndex; i < data.getNumberOfColumns(); ++i ) {
 		if ( hasDependentVariables ) {
 			var nextDependentQuestionIndex = firstIndex + numColumnsForDependentQId;
-			if ( i >= nextDependentQuestionIndex ) {	
+			if ( i >= nextDependentQuestionIndex ) {
 				++currDependentQIndex;
 				numColumnsForDependentQId += getNumColumnsForDependentQuestion(dependentVarArray[currDependentQIndex][0]);
 			}
 			arr.push( { column: i, aggregation: getAggregationMethodObject( dependentVarArray[ currDependentQIndex ][0] ), type: 'number'} );
 		}
-		
+
 		else {
 			// TODO: Here we assume that the only possible aggregation
 			// for reports that do not have dependent variables
-			// is the "count" aggregation.			
+			// is the "count" aggregation.
 			// In the future add other aggregation types as well
 			// (for example, "max" aggregation for Dates)
-			
+
 			// an aggregation of separate counts requires the "sum" aggregation.
 			arr.push( { column: i, aggregation: google.visualization.data.sum, type: 'number'} );
 		}
 	}
-	
+
 	return arr;
 }
 
@@ -3452,12 +3443,12 @@ function addMissingColumnsForJoin( leftColumns, rightColumns, leftQId, rightQId,
 	var useLeft, columns;
 	var joinKeyIndexes = [];
 	for ( var i=0; i<googleJoinKey.length; ++i ) { joinKeyIndexes.push( googleJoinKey[i][0] );}
-	
+
 	// Form: add FormId to the columns if appropriate
 	if ( getQuestionSelectedJoinContextAutoFieldGrouping( leftQId ) == 'form' || getQuestionSelectedJoinContextAutoFieldGrouping( rightQId ) == 'form' ){
 		useLeft = getQuestionSelectedJoinContextAutoFieldGrouping( leftQId ) == 'form';
 		columns = ( useLeft ? leftColumns : rightColumns );
-		
+
 		var formColumn = getColumnIndex(getColumnNameForContext('form'));
 		if ( !arrayContains( columns, formColumn ) && !arrayContains( joinKeyIndexes, formColumn )){
 			// Add the FormId column to the columns array if the FormId column has not yet been added,
@@ -3470,12 +3461,12 @@ function addMissingColumnsForJoin( leftColumns, rightColumns, leftQId, rightQId,
 			}
 		}
 	}
-	
+
 	// Module: add ModuleId to the columns if appropriate
 	if ( getQuestionSelectedJoinContextAutoFieldGrouping( leftQId ) == 'module' || getQuestionSelectedJoinContextAutoFieldGrouping( rightQId ) == 'module' ){
 		useLeft = getQuestionSelectedJoinContextAutoFieldGrouping( leftQId ) == 'module';
 		columns = ( useLeft ? leftColumns : rightColumns );
-		
+
 		var moduleColumn = getColumnIndex(getColumnNameForContext('module'));
 		if ( !arrayContains( columns, moduleColumn ) && !arrayContains( joinKeyIndexes, moduleColumn )){
 			// Add the ModuleId column to the columns array if the ModuleId column has not yet been added,
@@ -3488,14 +3479,14 @@ function addMissingColumnsForJoin( leftColumns, rightColumns, leftQId, rightQId,
 			}
 		}
 	}
-	
+
 	// Owner: added by default; skip
-	
+
 	// FormTableRow: add FormTableRow to the columns if appropriate
 	if ( hasTableContext( leftQId ) || hasTableContext( rightQId ) ) {
 		useLeft = hasTableContext( leftQId );
 		columns = ( useLeft ? leftColumns : rightColumns );
-		
+
 		var formTableColumn = getColumnIndex('FormTableRow');
 		if ( !arrayContains( columns, formTableColumn ) && !arrayContains( joinKeyIndexes, formTableColumn )){
 			// Add the FormTableRow column to the "columns" array if the FormTableRow column has not yet been added,
@@ -3508,13 +3499,13 @@ function addMissingColumnsForJoin( leftColumns, rightColumns, leftQId, rightQId,
 			}
 		}
 	}
-	
+
 	// Other: "Other" added by default when applicable; skip
 }
 
 // Returns the column index associated with the specified column
 function getColumnIndex(columnName){
-	if ( !allJoinColumns ) allJoinColumns = getAllJoinColumns(); 
+	if ( !allJoinColumns ) allJoinColumns = getAllJoinColumns();
 	var index = jQuery.inArray( columnName, allJoinColumns );
 	return ( (index == -1) ? null : index );
 }
@@ -3522,35 +3513,35 @@ function getColumnIndex(columnName){
 // Returns the Google Visualization column object that should be used for this question
 function getTransformedColumnObject(qId,dataTableOrView,qColumnIndex){
 	var transformedObject = new Object();
-	
+
 	var dateShowElmId = "dateSelDataShow_" + qId; // Date Transformation (month and year only, year only, month only, etc)
 	var dateFormatElmId = "dateSelDataFormat_" + qId; // Date Formatting (MM/dd/yyyy, MM/YY, etc)
 	var questionHasDateTransformations = (getQuestionSelectedDataType(qId) == 'date');
-	
+
 	// a. DATE TRANSFORMATION
 	if ( questionHasDateTransformations ){
-		// transform the dates according to the submitted criteria	
+		// transform the dates according to the submitted criteria
 		var transformation = jQuery("#"+dateShowElmId).val();
-		var format = jQuery("#"+dateFormatElmId).val();	
+		var format = jQuery("#"+dateFormatElmId).val();
 		var transformer = new com.healthcit.DateTableColumnTransformations(qColumnIndex,transformation,format);
 
 		// reformat the DataTable
-		var viewFormat = transformer.format(dataTableOrView);		
-		
+		var viewFormat = transformer.format(dataTableOrView);
+
 		// generate a new DataView with new date values,
 		// depending on what was selected for the date transformations
 		function oFunc(dataTable,rownum){return transformer.transform(dataTable,rownum);}
 		transformedObject = { calc:oFunc, type:'date', label:dataTableOrView.getColumnLabel(qColumnIndex), format: viewFormat } ;
 	}
 	// END DATE TRANSFORMATION
-	
+
 	// TODO: NUMERIC TRANSFORMATION, STRING TRANSFORMATION, OTHER
-	
+
 	// else add the column as is
 	else {
 		transformedObject = qColumnIndex ;
 	}
-	
+
 	return transformedObject;
 }
 
@@ -3562,13 +3553,13 @@ function getTransformedColumnObject(qId,dataTableOrView,qColumnIndex){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //Sets up the columns that will be appropriate for this report type.
 //NOTE: This function is overriden in the proprietary code.
-function resetColumnsForVisualization(reportType,data,view){	
+function resetColumnsForVisualization(reportType,data,view){
 	return new google.visualization.DataView(view);
 }
 
 //Transforms the data as appropriate for this report type.
 //NOTE: This function is overriden in the proprietary code.
-function transformDataForVisualization(reportType,dataTable){	
+function transformDataForVisualization(reportType,dataTable){
 	return new google.visualization.DataView(dataTable);
 }
 
@@ -3592,7 +3583,7 @@ function populateSavedQueryListSection(){
 }
 
 //NOTE: This function is overriden in the proprietary code.
-function resetCurrentSavedReport(){	
+function resetCurrentSavedReport(){
 }
 
 // NOTE: This function is overriden in the proprietary code.
@@ -3610,19 +3601,19 @@ function getIndependentVarAxisTitle(){
 // get the axis title for the dependent variable(s)
 function getDependentVarAxisTitle() {
 	var titleHash = new Object();
-	
+
 	var aggregationTitles = {'sum':'Total','count':'Count','countNonNull':'Count','countNonZeroNonNull':'Count','avg':'Average','max':'Max','min':'Min'};
-	
+
 	for ( var i=0; i<dependentVarArray.length; ++i ) {
 		titleHash[ dependentVarArray[i][0] ]= getQuestionShortName(dependentVarArray[i][0]);
 		var selectedAggregation = getSelectedAggregation( dependentVarArray[i][0] );
 		titleHash[ dependentVarArray[i][0] ]+=
-			' ' + 
-			( aggregationTitles[ selectedAggregation ] ? 
-			  aggregationTitles[ selectedAggregation ] : 
+			' ' +
+			( aggregationTitles[ selectedAggregation ] ?
+			  aggregationTitles[ selectedAggregation ] :
 			  selectedAggregation.capitalizeIt() );
 	}
-	
+
 	var title = new Array;
 	for ( var key in titleHash ) {
 		title.push( titleHash[ key ] );
@@ -3641,15 +3632,15 @@ function getFormattedColumnNameForShortName( shortName ) {
 	if ( jQuery.inArray( shortName.toLowerCase() , googleQueryApiReservedWords ) > -1 ) {
 		shortName = 'C_' + shortName;
 	}
-	
+
 	// Update numeric short names by prepending 'N_'
 	if ( shortName.match(/^[0-9]+$/) ){
 		shortName = 'N_' + shortName;
 	}
-	
+
 	// Replace any Google Query API reserved characters with an underscore (_)
 	shortName = shortName.replace(/[+-\/,*]/,'_');
-	
+
 	// Remove all whitespaces and capitalize
 	var arr = shortName.split(" ");
 	var newShortName = '';
@@ -3664,15 +3655,15 @@ function getCurrentChartHeight(reportType){
 	var baseHeight = 200;
 	var numBaseVariables = baseVarArray.length;
 	var numRows = groupedResultSet.getNumberOfRows();
-	
+
 	if ( parseInt(reportType) >= 6 && parseInt(reportType) <= 9 ) { //Image Line, Area, Bar, Pie Charts
 		return baseHeight + ( 230 * numBaseVariables );
 	}
-	
+
 	else if ( parseInt(reportType) == 5 ) { // Table
 		return numRows * 30;
 	}
-		
+
 	else return baseHeight + 200; //default height is 400
 }
 
@@ -3683,11 +3674,11 @@ function getQuestionShortName( qId ) {
 
 // get the full list of questions
 function getFullListOfQuestions() {
-	var list = 
+	var list =
 		jQuery.map(
 			jQuery('input[type=checkbox][id^=check_]'),
 			function( elm ){
-				return { label: elm.value, 
+				return { label: elm.value,
 						 questionId: elm.id.replace('check_','')}}
 			);
 	return list;
@@ -3824,9 +3815,9 @@ function getGoogleWhereClause( qId ) {
 			whereClause = ' WHERE (FormTableRow IS NULL OR FormTableRow = \'null\')';
 		}
 	}
-	
+
 	//.................(enter any other procesing logic here...)........................//
-	
+
 	// return the WHERE clause
 	return whereClause;
 }
@@ -3854,15 +3845,15 @@ function addAggregationBox( qId ) {
 	// Update the confirmation box
 	var quesIndDepBoxTextClass = 'inddeptxt_' + qId;
 	var aggregationBoxId = 'aggregation_' + qId;
-	var aggregationBoxClass = 'aggtn_' + qId;	
+	var aggregationBoxClass = 'aggtn_' + qId;
 	jQuery( '.' + quesIndDepBoxTextClass).after("<li class=\"aggregation " + aggregationBoxClass + "\"><span>Aggregation:<span id=\""+aggregationBoxId+"\"/></span></li>");
 
 	// Derive the list of aggregation types
 	var list = getListOfAggregations( qId );
-	
+
 	// Update the hash of aggregations
 	aggregationSet[ qId ] = new UpAndDownSelectBox( aggregationBoxId, list );
-	
+
 }
 
 function removeAggregationBox( qId ) {
@@ -3870,7 +3861,7 @@ function removeAggregationBox( qId ) {
 	var aggregationBoxClass = 'aggtn_' + qId;
 	var aggregationBoxId = 'aggregation_' + qId;
 	jQuery( '.' + aggregationBoxClass).remove();
-		
+
 	// Update the hash of aggregations
 	aggregationSet[ qId ] = null;
 }
@@ -3898,8 +3889,8 @@ function getAggregationMethodObject(qId){
 		//   This is handled by adding a column which represents the number of CouchDB documents for each dependent variable's row.
 		//   Hence, the total count is the sum of CouchDB documents in this column.)
 		if ( str == 'count') {
-			str = hasNumericDataType( qId ) ? 'countNonNull' : 'sum'; 
-		}		
+			str = hasNumericDataType( qId ) ? 'countNonNull' : 'sum';
+		}
 
 		// If a custom aggregator exists, then use it; otherwise
 		// use Google's aggregator.
@@ -3976,7 +3967,7 @@ function isTableType( reportType ) {
 	return parseInt(reportType) == 5;
 }
 
-// Custom aggregators 
+// Custom aggregators
 var cacure = {
 		// returns the count of a given set of elements
 		// exclusive of null values
@@ -3999,13 +3990,13 @@ var cacure = {
 				dt2JoinKey.push( keys[i][1] );
 			}
 
-//          (Commented out standard google API join for now)			
+//          (Commented out standard google API join for now)
 //			var useManyToManyJoin = ( hasDuplicateKeysInDataTable( dt2, dt2JoinKey ) || existsTableContextInCurrentQuery() );
 //			if ( ! useManyToManyJoin ) {
 //				return google.visualization.data.join(dt1, dt2, joinMethod, keys, dt1Columns, dt2Columns);
 //			}
 //			else {
-				var leadingColumns = getLeadingColumnIndexes();	
+				var leadingColumns = getLeadingColumnIndexes();
 				return customizedJoin(dt1, dt2, joinMethod, keys, dt1Columns, dt2Columns, leadingColumns );
 //			}
 		}
@@ -4032,13 +4023,13 @@ function exportData()
 		}
 		var token = new Date().getTime();
 		overlayScreen("Creating report. Please wait...");
-		jQuery.download(baseUrlString  + 'DataExportServlet',{'keys': keyParams, "token": token});		
-		
+		jQuery.download(baseUrlString  + 'DataExportServlet',{'keys': keyParams, "token": token});
+
 		fileDownloadCheckTimer = window.setInterval(function () {
 			jQuery.get(baseUrlString  + 'DataExportServlet', {token:token}, onDownloadFinish, "text");
-		}, 1000);		
+		}, 1000);
 	}
-	
+
 	function onDownloadFinish(status){
 		if(status){
 			if(status=='FINISHED'){
@@ -4046,14 +4037,14 @@ function exportData()
 				window.clearInterval(fileDownloadCheckTimer);
 			} else if(status=='ERROR'){
 				removeOverlayScreen();
-				jAlert("Error occurred while creating data dump.");				
+				jAlert("Error occurred while creating data dump.");
 				window.clearInterval(fileDownloadCheckTimer);
 			}
 		} else {
 			removeOverlayScreen();
-			jAlert("Error occurred while creating data dump.");				
+			jAlert("Error occurred while creating data dump.");
 			window.clearInterval(fileDownloadCheckTimer);
-		}	
-	};	
-	
+		}
+	};
+
 }
