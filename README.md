@@ -1,7 +1,8 @@
 Welcome to the EDCT Analytics Project!
 =========================================
 
-EDCT Analytics.................. It is developed in Java and requires Apache Ant for building.
+EDCT Analytics is a Web GUI application which provide easy and dynamic interface to navigate collected data, and enable ad-hoc data trends research and detection.  It utilizes Google Chart Tools to create graphical representations of data. 
+It is developed in Java and requires Apache Ant for building.
 
 EDCT Analytics is distributed under the BSD 3-Clause License. Please see the NOTICE and LICENSE files for details.
 
