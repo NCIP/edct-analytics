@@ -11,7 +11,7 @@ You will find more details about EDCT Analytics in the following links:
 
  * [Code Repository](https://github.com/NCIP/edct-analytics)
  * [Issue Tracker](https://tracker.nci.nih.gov/browse/EDCT)
- * [Documentation]()
+ * [Documentation](https://wiki.nci.nih.gov/display/eDCT/Enterprise+Data+Collection+Tool)
  
  
 Please join us in further developing and improving EDCT Analytics.
