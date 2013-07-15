@@ -1,8 +1,8 @@
 Welcome to the EDCT Analytics Project!
 =========================================
 
-eDCT Analytics is a Web application that provides an easy and dynamic interface to navigate data collected thourgh the
-[eDCT Collector](https://github.com/NCIP/edct-collector), and enable ad-hoc data trends research and detection.  
+eDCT Analytics is a Web application that provides an easy and dynamic interface to navigate data collected through 
+the [eDCT Collector](https://github.com/NCIP/edct-collector), and enable ad-hoc data trends research and detection.  
 It utilizes Google Chart Tools to create graphical representations of data. 
 
 It is developed in Java and requires Apache Ant for building.
